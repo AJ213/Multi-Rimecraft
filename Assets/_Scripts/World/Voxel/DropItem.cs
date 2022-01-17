@@ -8,7 +8,6 @@ public class DropItem : MonoBehaviour
     private SphericalRigidbody rb;
     [SerializeField] private float decayTime = 60;
 
-    [SerializeField] private Color[] colors = default;
     [SerializeField] private Material[] materials = default;
 
     private void Awake()
@@ -41,7 +40,6 @@ public class DropItem : MonoBehaviour
         else
         {
             items = new ItemStack(id, amount);
-            GetComponent<Light>().color = colors[items.id];
             GetComponent<MeshRenderer>().material = materials[items.id];
         }
     }
