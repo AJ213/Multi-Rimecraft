@@ -63,7 +63,7 @@ public class Chunk
                         {
                             if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z].id] != null)
                             {
-                                if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z].id].isSolid)
+                                if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z].id].IsSolid)
                                 {
                                     UpdateMeshData(new int3(x, y, z));
                                 }
@@ -109,37 +109,37 @@ public class Chunk
         for (int p = 0; p < 6; p++)
         {
             VoxelState neighbor = WorldHelper.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
-            if (neighbor != null && neighbor.Properties.renderNeightborFaces)
+            if (neighbor != null && neighbor.Properties.RenderNeighborFaces)
             {
                 int faceVertCount = 0;
-                for (int i = 0; i < voxel.Properties.meshData.faces[p].vertData.Length; i++)
+                for (int i = 0; i < voxel.Properties.MeshData.faces[p].vertData.Length; i++)
                 {
-                    vertices.Add(localPosition + (float3)voxel.Properties.meshData.faces[p].vertData[i].position);
-                    normals.Add(voxel.Properties.meshData.faces[p].normal);
-                    AddTexture(voxel.Properties.GetTextureID(p), voxel.Properties.meshData.faces[p].vertData[i].uv);
+                    vertices.Add(localPosition + (float3)voxel.Properties.MeshData.faces[p].vertData[i].position);
+                    normals.Add(voxel.Properties.MeshData.faces[p].normal);
+                    AddTexture(voxel.Properties.GetTextureID(p), voxel.Properties.MeshData.faces[p].vertData[i].uv);
                     faceVertCount++;
                 }
 
                 // spaghetti ice reflection programming
                 if (voxel.id == 2)
                 {
-                    for (int i = 0; i < voxel.Properties.meshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < voxel.Properties.MeshData.faces[p].triangles.Length; i++)
                     {
-                        shinyTriangles.Add(vertexIndex + voxel.Properties.meshData.faces[p].triangles[i]);
+                        shinyTriangles.Add(vertexIndex + voxel.Properties.MeshData.faces[p].triangles[i]);
                     }
                 }
-                else if (!voxel.Properties.renderNeightborFaces)
+                else if (!voxel.Properties.RenderNeighborFaces)
                 {
-                    for (int i = 0; i < voxel.Properties.meshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < voxel.Properties.MeshData.faces[p].triangles.Length; i++)
                     {
-                        triangles.Add(vertexIndex + voxel.Properties.meshData.faces[p].triangles[i]);
+                        triangles.Add(vertexIndex + voxel.Properties.MeshData.faces[p].triangles[i]);
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < voxel.Properties.meshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < voxel.Properties.MeshData.faces[p].triangles.Length; i++)
                     {
-                        transparentTriangles.Add(vertexIndex + voxel.Properties.meshData.faces[p].triangles[i]);
+                        transparentTriangles.Add(vertexIndex + voxel.Properties.MeshData.faces[p].triangles[i]);
                     }
                 }
 

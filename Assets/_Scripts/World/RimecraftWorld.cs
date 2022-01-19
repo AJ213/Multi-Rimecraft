@@ -18,7 +18,7 @@ public class RimecraftWorld : MonoBehaviour
     public Material material = null;
     public Material transparentMaterial = null;
     public Material shinyMaterial = null;
-    public BlockType[] blockTypes = null;
+    public AllBlockTypes blockTypes = null;
 
     [HideInInspector]
     public Dictionary<int3, Chunk> chunks = new Dictionary<int3, Chunk>();
@@ -54,6 +54,11 @@ public class RimecraftWorld : MonoBehaviour
         {
             instance = this;
         }
+    }
+
+    public static void EnqueueModification(ConcurrentQueue<VoxelMod> modification)
+    {
+        modifications.Enqueue(modification);
     }
 
     private void Start()
@@ -197,7 +202,8 @@ public class RimecraftWorld : MonoBehaviour
             }
         }
 
-        // Any chunks left in the previousActiveChunks list are no longer in the player's view distance, so loop through and disable them.
+        // Any chunks left in the previousActiveChunks list are no longer in the player's view
+        // distance, so loop through and disable them.
         foreach (int3 c in previouslyActiveChunks)
         {
             chunks[new int3(c.x, c.y, c.z)].IsActive = false;
@@ -278,7 +284,7 @@ public class RimecraftWorld : MonoBehaviour
             return 0;
         }
 
-        if (blockTypes[voxel.id].isSolid)
+        if (blockTypes[voxel.id].IsSolid)
         {
             return voxel.id;
         }
@@ -286,11 +292,6 @@ public class RimecraftWorld : MonoBehaviour
         {
             return 0;
         }
-    }
-
-    public VoxelState GetVoxelState(int3 globalPosition)
-    {
-        return worldData.GetVoxel(globalPosition);
     }
 
     public bool InUI
@@ -308,84 +309,6 @@ public class RimecraftWorld : MonoBehaviour
             {
                 Cursor.lockState = CursorLockMode.Locked;
                 Cursor.visible = false;
-            }
-        }
-    }
-
-    public static ushort SamplePosition(int3 globalPosition, BiomeAttributes[] biomes)
-    {
-        // Set biome to the one with the strongest weight.
-        int terrainHeight = 0;
-        BiomeAttributes mainBiome = biomes[0];
-        for (int i = 0; i < biomes.Length; i++)
-        {
-            terrainHeight += Mathf.FloorToInt(biomes[i].terrainHeight * Noise.Get2DSimplex(new Vector2(globalPosition.x, globalPosition.z), 2 * biomes[i].offset, biomes[i].terrainScale));
-        }
-        terrainHeight /= biomes.Length;
-
-        ushort voxelID = 0;
-
-        SurfaceBlocks(ref voxelID, globalPosition, mainBiome, terrainHeight, 2, 15);
-        LodeGeneration(ref voxelID, globalPosition, mainBiome);
-        FloraGeneration(globalPosition, mainBiome, terrainHeight);
-
-        return voxelID;
-    }
-
-    private static void SurfaceBlocks(ref ushort voxelID, int3 globalPosition, BiomeAttributes biome, int terrainHeight, int depthMultiplier, int cavernHeight)
-    {
-        int cavernDepthAtPosition = (int)(math.pow(4, math.ceil(math.log10(math.abs(globalPosition.y)) / math.log10(4))) / depthMultiplier);
-        int cavernTerrainHeight = terrainHeight - cavernDepthAtPosition;
-        int heightMultiplier = (int)math.max(1, math.log2(math.abs(globalPosition.y)) - 3);
-        if (globalPosition.y == terrainHeight)
-        {
-            voxelID = biome.surfaceBlock;
-        }
-        else if (globalPosition.y < terrainHeight && globalPosition.y > terrainHeight - 4)
-        {
-            voxelID = biome.subSurfaceBlock;
-        }
-        else if (globalPosition.y > terrainHeight)
-        {
-            voxelID = 0;
-        }
-        else if (globalPosition.y > cavernTerrainHeight && globalPosition.y < cavernTerrainHeight + (cavernHeight * heightMultiplier))
-        {
-            voxelID = 0;
-        }
-        else
-        {
-            voxelID = 3;
-        }
-    }
-
-    private static void LodeGeneration(ref ushort voxelID, int3 globalPosition, BiomeAttributes biome)
-    {
-        if (voxelID == 3 || voxelID == 1)
-        {
-            foreach (Lode lode in biome.lodes)
-            {
-                if (globalPosition.y > lode.minHeight && globalPosition.y < lode.maxHeight)
-                {
-                    if (Noise.Get3DSimplex(globalPosition, lode.noiseOffset, lode.scale) > lode.threshold)
-                    {
-                        voxelID = lode.blockID;
-                    }
-                }
-            }
-        }
-    }
-
-    private static void FloraGeneration(int3 globalPosition, BiomeAttributes biome, int terrainHeight)
-    {
-        if (globalPosition.y == terrainHeight && biome.placeMajorFlora)
-        {
-            if (Noise.Get2DSimplex(new Vector2(globalPosition.x, globalPosition.z), 200, biome.majorFloraZoneScale) > biome.majorFloraZoneThreshold)
-            {
-                if (Noise.Get2DSimplex(new Vector2(globalPosition.x, globalPosition.z), 700, biome.majorFloraPlacementScale) > biome.majorFloraPlacementThreshold)
-                {
-                    modifications.Enqueue(Structure.GenerateMajorFlora(biome.majorFloraIndex, globalPosition, biome.minHeight, biome.maxHeight));
-                }
             }
         }
     }

@@ -15,7 +15,7 @@ MonoBehaviour:
   blockName: Leaf
   isSolid: 1
   meshData: {fileID: 11400000, guid: dd6ea5fafad4a8d498c578d02938005e, type: 2}
-  renderNeightborFaces: 1
+  renderNeighborFaces: 1
   icon: {fileID: 21300000, guid: 8e6474b455c2b27468709afb2530202e, type: 3}
   backFaceTexture: 6
   frontFaceTexture: 6

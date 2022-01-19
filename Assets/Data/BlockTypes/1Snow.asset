@@ -15,7 +15,7 @@ MonoBehaviour:
   blockName: Snow
   isSolid: 1
   meshData: {fileID: 11400000, guid: dd6ea5fafad4a8d498c578d02938005e, type: 2}
-  renderNeightborFaces: 0
+  renderNeighborFaces: 0
   icon: {fileID: 21300000, guid: b0f5a8859cceb12408d1323c9f874fd0, type: 3}
   backFaceTexture: 0
   frontFaceTexture: 0

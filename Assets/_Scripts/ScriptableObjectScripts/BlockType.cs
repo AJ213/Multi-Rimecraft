@@ -6,20 +6,25 @@ using UnityEngine;
 [CreateAssetMenu(fileName = "BlockType", menuName = "Rimecraft/BlockType")]
 public class BlockType : ScriptableObject
 {
-    public string blockName;
-    public bool isSolid;
-    public VoxelMeshData meshData;
-    public bool renderNeightborFaces;
-    public Sprite icon;
+    [SerializeField] private string blockName;
+    [SerializeField] private bool isSolid;
+    [SerializeField] private VoxelMeshData meshData;
+    [SerializeField] private bool renderNeighborFaces;
+    [SerializeField] private Sprite icon;
 
-    [Header("Texture Values")]
-    public int backFaceTexture;
+    public string BlockName => blockName;
+    public bool IsSolid => isSolid;
+    public VoxelMeshData MeshData => meshData;
+    public bool RenderNeighborFaces => renderNeighborFaces;
+    public Sprite Icon => icon;
 
-    public int frontFaceTexture;
-    public int topFaceTexture;
-    public int bottomFaceTexture;
-    public int leftFaceTexture;
-    public int rightFaceTexture;
+    [Header("Texture Values"), SerializeField] private int backFaceTexture;
+
+    [SerializeField] private int frontFaceTexture;
+    [SerializeField] private int topFaceTexture;
+    [SerializeField] private int bottomFaceTexture;
+    [SerializeField] private int leftFaceTexture;
+    [SerializeField] private int rightFaceTexture;
 
     // Back, Front, Top, Bottom, Left, Right
 

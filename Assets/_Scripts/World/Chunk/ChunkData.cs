@@ -45,7 +45,7 @@ public class ChunkData
                 for (int z = 0; z < Constants.ChunkSizeZ; z++)
                 {
                     int3 localPosition = new int3(x, y, z);
-                    chunk.map[x, y, z] = new VoxelState(RimecraftWorld.SamplePosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord), RimecraftWorld.Instance.biomes), chunk, localPosition);
+                    chunk.map[x, y, z] = new VoxelState(GenerateBlock.SamplePosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord), RimecraftWorld.Instance.biomes), localPosition);
                 }
             }
         }
@@ -55,7 +55,8 @@ public class ChunkData
 
     public void ModifyVoxel(int3 localPosition, ushort id)
     {
-        // It shouldn't ever be null in the first place, meaning there is something wrong happening here occasionally (with jobs)
+        // It shouldn't ever be null in the first place, meaning there is something wrong happening
+        // here occasionally (with jobs)
         if (map[localPosition.x, localPosition.y, localPosition.z] == null || map[localPosition.x, localPosition.y, localPosition.z].id == id)
         {
             return;

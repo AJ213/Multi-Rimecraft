@@ -14015,14 +14015,7 @@ MonoBehaviour:
   material: {fileID: 2100000, guid: a2057a62d0e121f43922d28e5ccb4da9, type: 2}
   transparentMaterial: {fileID: 2100000, guid: cca088c3de9907d43a823f0496b6a4aa, type: 2}
   shinyMaterial: {fileID: 2100000, guid: a24803d6c8005254b9e8338db7fb7c22, type: 2}
-  blockTypes:
-  - {fileID: 11400000, guid: e9f7b72fa7fb21c4cb4d258f980dde16, type: 2}
-  - {fileID: 11400000, guid: fe2309b4a9c41cd4bbdaa8d40f0c4b4d, type: 2}
-  - {fileID: 11400000, guid: e4cb9d111f558a249938621ab5871e58, type: 2}
-  - {fileID: 11400000, guid: 4c32d07c21b64434d94b5e5308402c00, type: 2}
-  - {fileID: 11400000, guid: 67e0362cf7016f0438ee1a14c3b3e522, type: 2}
-  - {fileID: 11400000, guid: 3caa91537269c274d80da87fa143e183, type: 2}
-  - {fileID: 11400000, guid: 65778f50f921083419a4b19003b27012, type: 2}
+  blockTypes: {fileID: 11400000, guid: 82674fbc49e0dbd4c91789f489416d73, type: 2}
   playerChunkCoord:
     x: 0
     y: 0
