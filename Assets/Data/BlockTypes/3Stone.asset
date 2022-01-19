@@ -15,7 +15,7 @@ MonoBehaviour:
   blockName: Stone
   isSolid: 1
   meshData: {fileID: 11400000, guid: dd6ea5fafad4a8d498c578d02938005e, type: 2}
-  renderNeightborFaces: 0
+  renderNeighborFaces: 0
   icon: {fileID: 21300000, guid: d464c09f43ad76a4c9b2eee639fc5be0, type: 3}
   backFaceTexture: 2
   frontFaceTexture: 2

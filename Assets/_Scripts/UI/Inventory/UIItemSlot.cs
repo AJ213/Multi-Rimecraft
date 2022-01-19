@@ -44,7 +44,7 @@ public class UIItemSlot : MonoBehaviour
     {
         if (itemSlot != null && itemSlot.HasItem)
         {
-            slotIcon.sprite = RimecraftWorld.Instance.blockTypes[itemSlot.stack.id].icon;
+            slotIcon.sprite = RimecraftWorld.Instance.blockTypes[itemSlot.stack.id].Icon;
             slotAmount.text = itemSlot.stack.amount.ToString();
             slotIcon.enabled = true;
             slotAmount.enabled = true;

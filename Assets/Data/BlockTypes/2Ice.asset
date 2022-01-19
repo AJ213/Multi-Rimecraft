@@ -15,7 +15,7 @@ MonoBehaviour:
   blockName: Ice
   isSolid: 1
   meshData: {fileID: 11400000, guid: dd6ea5fafad4a8d498c578d02938005e, type: 2}
-  renderNeightborFaces: 0
+  renderNeighborFaces: 0
   icon: {fileID: 21300000, guid: 58bc5d8af4da8104eb75be64a625b2b8, type: 3}
   backFaceTexture: 1
   frontFaceTexture: 1
