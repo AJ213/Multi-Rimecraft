@@ -23,13 +23,15 @@ namespace RimecraftServer
 
         public static void PlayerMovement(int fromClient, Packet packet)
         {
-            bool[] inputs = new bool[packet.ReadInt()];
+            /*bool[] inputs = new bool[packet.ReadInt()];
             for (int i = 0; i < inputs.Length; i++)
             {
                 inputs[i] = packet.ReadBool();
-            }
+            }*/
+            Vector3 position = packet.ReadVector3();
             Quaternion rotation = packet.ReadQuaternion();
 
+            Server.clients[fromClient].player.SetInput(position, rotation);
             //Server.clients[fromClient].player.SetInput(_inputs, rotation);
         }
     }
