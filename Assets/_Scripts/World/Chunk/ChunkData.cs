@@ -34,7 +34,7 @@ public class ChunkData
     [System.NonSerialized] public Chunk chunk;
 
     [HideInInspector]
-    public VoxelState[,,] map = new VoxelState[Constants.ChunkSizeX, Constants.ChunkSizeY, Constants.ChunkSizeZ];
+    public ushort[,,] map = new ushort[Constants.ChunkSizeX, Constants.ChunkSizeY, Constants.ChunkSizeZ];
 
     public static void Populate(ChunkData chunk)
     {
@@ -45,7 +45,7 @@ public class ChunkData
                 for (int z = 0; z < Constants.ChunkSizeZ; z++)
                 {
                     int3 localPosition = new int3(x, y, z);
-                    chunk.map[x, y, z] = new VoxelState(GenerateBlock.SamplePosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord), RimecraftWorld.Instance.biomes));
+                    chunk.map[x, y, z] = GenerateBlock.SamplePosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord), RimecraftWorld.Instance.biomes);
                 }
             }
         }
@@ -55,16 +55,12 @@ public class ChunkData
 
     public void ModifyVoxel(int3 localPosition, ushort id)
     {
-        // It shouldn't ever be null in the first place, meaning there is something wrong happening
-        // here occasionally (with jobs)
-        if (map[localPosition.x, localPosition.y, localPosition.z] == null || map[localPosition.x, localPosition.y, localPosition.z].id == id)
+        if (map[localPosition.x, localPosition.y, localPosition.z] == id)
         {
             return;
         }
 
-        VoxelState voxel = map[localPosition.x, localPosition.y, localPosition.z];
-
-        voxel.id = id;
+        map[localPosition.x, localPosition.y, localPosition.z] = id;
         WorldData.AddToModifiedChunkList(this);
         if (chunk != null)
         {
@@ -72,7 +68,7 @@ public class ChunkData
         }
     }
 
-    public VoxelState VoxelFromPosition(int3 localPosition)
+    public ushort VoxelFromPosition(int3 localPosition)
     {
         return map[localPosition.x, localPosition.y, localPosition.z];
     }
