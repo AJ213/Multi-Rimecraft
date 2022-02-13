@@ -68,8 +68,7 @@ public class ChunkMesh
 
     private void UpdateMeshData(int3 localPosition)
     {
-        int3 chunkCoord = WorldHelper.GetChunkCoordFromPosition(coord);
-        ushort voxel = WorldData.chunks[chunkCoord].map[localPosition.x, localPosition.y, localPosition.z];
+        ushort voxel = WorldData.chunks[coord].map[localPosition.x, localPosition.y, localPosition.z];
 
         for (int p = 0; p < 6; p++)
         {

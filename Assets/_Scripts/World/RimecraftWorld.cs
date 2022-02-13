@@ -95,12 +95,7 @@ public class RimecraftWorld : MonoBehaviour
         }
     }
 
-    public void AddChunkToUpdate(int3 coord)
-    {
-        AddChunkToUpdate(coord, false);
-    }
-
-    public void AddChunkToUpdate(int3 coord, bool insert)
+    public void AddChunkToUpdate(int3 coord, bool insert = false)
     {
         if (!chunkMeshes.ContainsKey(coord))
         {
