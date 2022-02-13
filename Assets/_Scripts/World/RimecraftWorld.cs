@@ -151,7 +151,7 @@ public class RimecraftWorld : MonoBehaviour
                     if (!chunkMeshes.ContainsKey(newCoord))
                     {
                         chunkMeshes[newCoord] = new ChunkMesh(newCoord);
-                        worldData.RequestChunk(newCoord, true);
+                        WorldData.RequestChunk(newCoord, true);
                         AddChunkToUpdate(newCoord);
                     }
 

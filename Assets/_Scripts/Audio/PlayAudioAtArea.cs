@@ -63,7 +63,7 @@ public class PlayAudioAtArea : MonoBehaviour
         int numAlive = snow.GetParticles(particles);
         for (int i = 0; i < particles.Length; i++)
         {
-            ushort voxel = WorldHelper.GetVoxelFromPosition(particles[i].position);
+            ushort voxel = WorldData.GetVoxelFromPosition(particles[i].position);
             if (voxel != 0)
             {
                 particles[i].remainingLifetime = 0;

@@ -17,7 +17,7 @@ public class WorldData
         seed = theSeed;
     }
 
-    public ChunkData RequestChunk(int3 coord, bool create)
+    public static ChunkData RequestChunk(int3 coord, bool create)
     {
         if (chunks.ContainsKey(coord))
         {
@@ -32,6 +32,24 @@ public class WorldData
         else
         {
             return null;
+        }
+    }
+
+    public static ChunkData RequestChunkViaGlobalPosition(int3 globalPosition, bool create)
+    {
+        return RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), create);
+    }
+
+    public static ushort GetVoxelFromPosition(float3 globalPosition)
+    {
+        ChunkData chunk = RequestChunkViaGlobalPosition((int3)globalPosition, true);
+        if (chunk == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return chunk.VoxelFromPosition(WorldHelper.GetVoxelLocalPositionInChunk(globalPosition));
         }
     }
 

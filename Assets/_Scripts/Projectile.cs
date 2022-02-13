@@ -52,9 +52,9 @@ public class Projectile : MonoBehaviour
             {
                 int3 breakBlock = rbody.lastCollidedWithBlockLocation;
                 // Ice, Snow, Stone
-                ushort blockBreakingID = WorldHelper.GetVoxelFromPosition(breakBlock);
+                ushort blockBreakingID = WorldData.GetVoxelFromPosition(breakBlock);
 
-                ChunkData chunk = WorldHelper.GetChunkFromPosition(breakBlock);
+                ChunkData chunk = WorldData.RequestChunkViaGlobalPosition(breakBlock, true);
                 if (chunk != null)
                 {
                     RimecraftWorld.worldData.SetVoxel(breakBlock, 0);
