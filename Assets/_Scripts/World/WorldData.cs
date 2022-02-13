@@ -70,12 +70,12 @@ public class WorldData
         chunk.ModifyVoxel(voxel, value);
     }
 
-    public VoxelState GetVoxel(int3 globalPosition)
+    public ushort GetVoxel(int3 globalPosition)
     {
         ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
         if (chunk == null)
         {
-            return null;
+            return 0;
         }
 
         int3 voxel = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);

@@ -52,12 +52,7 @@ public class Projectile : MonoBehaviour
             {
                 int3 breakBlock = rbody.lastCollidedWithBlockLocation;
                 // Ice, Snow, Stone
-                VoxelState voxel = WorldHelper.GetVoxelFromPosition(breakBlock);
-                ushort blockBreakingID = 0;
-                if (voxel != null)
-                {
-                    blockBreakingID = WorldHelper.GetVoxelFromPosition(breakBlock).id;
-                }
+                ushort blockBreakingID = WorldHelper.GetVoxelFromPosition(breakBlock);
 
                 Chunk chunk = WorldHelper.GetChunkFromPosition(breakBlock);
                 if (chunk != null)

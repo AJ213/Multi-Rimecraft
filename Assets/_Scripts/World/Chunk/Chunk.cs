@@ -59,16 +59,16 @@ public class Chunk
                 {
                     for (int z = 0; z < Constants.ChunkSizeZ; z++)
                     {
-                        if (chunkData.map[x, y, z] != null)
+                        //if (chunkData.map[x, y, z] != null)
+                        //{
+                        if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z]] != null)
                         {
-                            if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z].id] != null)
+                            if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z]].IsSolid)
                             {
-                                if (RimecraftWorld.Instance.blockTypes[chunkData.map[x, y, z].id].IsSolid)
-                                {
-                                    UpdateMeshData(new int3(x, y, z));
-                                }
+                                UpdateMeshData(new int3(x, y, z));
                             }
                         }
+                        //}
                     }
                 }
             }
@@ -104,42 +104,42 @@ public class Chunk
 
     private void UpdateMeshData(int3 localPosition)
     {
-        VoxelState voxel = chunkData.map[localPosition.x, localPosition.y, localPosition.z];
+        ushort voxel = chunkData.map[localPosition.x, localPosition.y, localPosition.z];
 
         for (int p = 0; p < 6; p++)
         {
-            VoxelState neighbor = WorldHelper.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
-            if (neighbor != null && RimecraftWorld.Instance.blockTypes[neighbor.id].RenderNeighborFaces)
+            ushort neighbor = WorldHelper.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
+            if (RimecraftWorld.Instance.blockTypes[neighbor].RenderNeighborFaces)
             {
                 int faceVertCount = 0;
-                for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].vertData.Length; i++)
+                for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].vertData.Length; i++)
                 {
-                    vertices.Add(localPosition + (float3)RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].vertData[i].position);
-                    normals.Add(RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].normal);
-                    AddTexture(RimecraftWorld.Instance.blockTypes[voxel.id].GetTextureID(p), RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].vertData[i].uv);
+                    vertices.Add(localPosition + (float3)RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].position);
+                    normals.Add(RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].normal);
+                    AddTexture(RimecraftWorld.Instance.blockTypes[voxel].GetTextureID(p), RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].uv);
                     faceVertCount++;
                 }
 
                 // spaghetti ice reflection programming
-                if (voxel.id == 2)
+                if (voxel == 2)
                 {
-                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
                     {
-                        shinyTriangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].triangles[i]);
+                        shinyTriangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
                     }
                 }
-                else if (!RimecraftWorld.Instance.blockTypes[voxel.id].RenderNeighborFaces)
+                else if (!RimecraftWorld.Instance.blockTypes[voxel].RenderNeighborFaces)
                 {
-                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
                     {
-                        triangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].triangles[i]);
+                        triangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
                     {
-                        transparentTriangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel.id].MeshData.faces[p].triangles[i]);
+                        transparentTriangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
                     }
                 }
 

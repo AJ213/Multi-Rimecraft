@@ -241,16 +241,11 @@ public class RimecraftWorld : MonoBehaviour
 
     public ushort CheckForVoxel(int3 globalPosition)
     {
-        VoxelState voxel = worldData.GetVoxel(globalPosition);
-        if (voxel == null)
-        {
-            //Debug.Log("Null block at " + globalPosition);
-            return 0;
-        }
+        ushort voxel = worldData.GetVoxel(globalPosition);
 
-        if (blockTypes[voxel.id].IsSolid)
+        if (blockTypes[voxel].IsSolid)
         {
-            return voxel.id;
+            return voxel;
         }
         else
         {

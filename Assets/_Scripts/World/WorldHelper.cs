@@ -42,12 +42,12 @@ public static class WorldHelper
         }
     }
 
-    public static VoxelState GetVoxelFromPosition(float3 globalPosition)
+    public static ushort GetVoxelFromPosition(float3 globalPosition)
     {
         Chunk chunk = GetChunkFromPosition(globalPosition);
         if (chunk == null)
         {
-            return null;
+            return 0;
         }
         else
         {
