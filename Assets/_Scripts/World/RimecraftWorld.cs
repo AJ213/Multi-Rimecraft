@@ -37,8 +37,6 @@ public class RimecraftWorld : MonoBehaviour
 
     private bool inUI = false;
 
-    public GameObject debugScreen;
-
     private static RimecraftWorld instance;
     public static RimecraftWorld Instance => instance;
 
@@ -77,6 +75,7 @@ public class RimecraftWorld : MonoBehaviour
         Camera.main.farClipPlane = Mathf.Sqrt(2) * Constants.ChunkSizeX * 2 * settings.viewDistance;
 
         spawnPosition = new Vector3(0, 5, 0);
+        player = GameObject.FindGameObjectWithTag("Player").transform;
         player.position = spawnPosition;
         CheckLoadDistance();
         CheckViewDistance();
@@ -107,11 +106,6 @@ public class RimecraftWorld : MonoBehaviour
         if (chunksToDraw.Count > 0)
         {
             chunksToDraw.Dequeue().CreateMesh();
-        }
-
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            debugScreen.SetActive(!debugScreen.activeSelf);
         }
     }
 

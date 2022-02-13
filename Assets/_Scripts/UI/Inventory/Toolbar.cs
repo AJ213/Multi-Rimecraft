@@ -8,6 +8,11 @@ public class Toolbar : MonoBehaviour
     public Player player;
     public int slotIndex = 0;
 
+    private void Start()
+    {
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
+    }
+
     private void Update()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
