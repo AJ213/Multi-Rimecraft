@@ -36,6 +36,7 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        ClientSend.PlayerMovement();
         if (!RimecraftWorld.Instance.InUI)
         {
             if (jumpRequest)

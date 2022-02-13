@@ -26,5 +26,10 @@ namespace RimecraftServer
             ServerSend.PlayerPosition(this);
             ServerSend.PlayerRotation(this);
         }
+        public void SetInput(Vector3 position, Quaternion rotation)
+        {
+            this.position = position;
+            this.rotation = rotation;
+        }
     }
 }
