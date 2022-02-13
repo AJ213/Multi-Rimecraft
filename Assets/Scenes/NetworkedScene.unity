@@ -501,6 +501,7 @@ GameObject:
   - component: {fileID: 1244011603}
   - component: {fileID: 1244011605}
   - component: {fileID: 1244011606}
+  - component: {fileID: 1244011607}
   m_Layer: 0
   m_Name: ClientManager
   m_TagString: Untagged
@@ -564,6 +565,18 @@ MonoBehaviour:
   localPlayerPrefab: {fileID: 7295460917682051559, guid: 06211bb315a180d43aadde7a77439fb0, type: 3}
   world: {fileID: 4319930333665759205, guid: b6466c8000b07a940886f4bcd12b5ac2, type: 3}
   playerPrefab: {fileID: 8737026440282011877, guid: a5e02e7efe2b2bd47bcc25cad3f3c4d2, type: 3}
+--- !u!114 &1244011607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1244011602}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 23a90cd3a4e985f41be1e5fc7eca3ff4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1342723455
 GameObject:
   m_ObjectHideFlags: 0
