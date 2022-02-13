@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Unity.Mathematics;
 
 [System.Serializable]
@@ -24,15 +22,6 @@ public class ChunkData
         Coord = pos;
     }
 
-    public ChunkData(int x, int y, int z)
-    {
-        coord.x = x;
-        coord.y = y;
-        coord.z = z;
-    }
-
-    [System.NonSerialized] public Chunk chunk;
-
     [HideInInspector]
     public ushort[,,] map = new ushort[Constants.ChunkSizeX, Constants.ChunkSizeY, Constants.ChunkSizeZ];
 
@@ -53,7 +42,7 @@ public class ChunkData
         WorldData.AddToModifiedChunkList(chunk);
     }
 
-    public void ModifyVoxel(int3 localPosition, ushort id)
+    public void ModifyVoxel(int3 localPosition, ushort id, bool updateSurrounding = false)
     {
         if (map[localPosition.x, localPosition.y, localPosition.z] == id)
         {
@@ -62,9 +51,31 @@ public class ChunkData
 
         map[localPosition.x, localPosition.y, localPosition.z] = id;
         WorldData.AddToModifiedChunkList(this);
-        if (chunk != null)
+
+        RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
+        if (updateSurrounding)
         {
-            RimecraftWorld.Instance.AddChunkToUpdate(chunk, true);
+            int3 globalPosition = WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord);
+            UpdateSorroundingVoxels(new int3(Mathf.FloorToInt(globalPosition.x),
+                                Mathf.FloorToInt(globalPosition.y),
+                                Mathf.FloorToInt(globalPosition.z)));
+        }
+    }
+
+    private void UpdateSorroundingVoxels(int3 globalPosition)
+    {
+        for (int p = 0; p < 6; p++)
+        {
+            int3 currentVoxel = globalPosition + VoxelData.faceChecks[p];
+
+            if (!WorldHelper.IsVoxelGlobalPositionInChunk(currentVoxel, coord))
+            {
+                int3 coord = WorldHelper.GetChunkCoordFromPosition(currentVoxel);
+                if (RimecraftWorld.Instance.chunkMeshes.ContainsKey(coord))
+                {
+                    RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
+                }
+            }
         }
     }
 

@@ -54,10 +54,11 @@ public class Projectile : MonoBehaviour
                 // Ice, Snow, Stone
                 ushort blockBreakingID = WorldHelper.GetVoxelFromPosition(breakBlock);
 
-                Chunk chunk = WorldHelper.GetChunkFromPosition(breakBlock);
+                ChunkData chunk = WorldHelper.GetChunkFromPosition(breakBlock);
                 if (chunk != null)
                 {
-                    chunk.EditVoxel(breakBlock, 0);
+                    int3 localPos = WorldHelper.GetVoxelLocalPositionInChunk(breakBlock);
+                    chunk.ModifyVoxel(localPos, 0, true);
                 }
 
                 if (blockBreakingID == 2)

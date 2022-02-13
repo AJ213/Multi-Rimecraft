@@ -27,16 +27,15 @@ public static class WorldHelper
                         Mathf.FloorToInt(localPosition.z) + (Constants.ChunkSizeZ * coord.z));
     }
 
-    public static Chunk GetChunkFromPosition(float3 globalPosition)
+    public static ChunkData GetChunkFromPosition(float3 globalPosition)
     {
         int3 coord = GetChunkCoordFromPosition(globalPosition);
-        if (RimecraftWorld.Instance.chunks.ContainsKey(coord))
+        if (WorldData.chunks.ContainsKey(coord))
         {
-            return RimecraftWorld.Instance.chunks[GetChunkCoordFromPosition(globalPosition)];
+            return WorldData.chunks[GetChunkCoordFromPosition(globalPosition)];
         }
         else
         {
-            // This is causing a bug likely that we need to fix
             //Debug.Log("Chunk doesn't exist at " + coord);
             return null;
         }
@@ -44,14 +43,14 @@ public static class WorldHelper
 
     public static ushort GetVoxelFromPosition(float3 globalPosition)
     {
-        Chunk chunk = GetChunkFromPosition(globalPosition);
+        ChunkData chunk = GetChunkFromPosition(globalPosition);
         if (chunk == null)
         {
             return 0;
         }
         else
         {
-            return GetChunkFromPosition(globalPosition).chunkData.VoxelFromPosition(GetVoxelLocalPositionInChunk(globalPosition));
+            return chunk.VoxelFromPosition(GetVoxelLocalPositionInChunk(globalPosition));
         }
     }
 

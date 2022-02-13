@@ -21,15 +21,15 @@ public class RimecraftWorld : MonoBehaviour
     public AllBlockTypes blockTypes = null;
 
     [HideInInspector]
-    public Dictionary<int3, Chunk> chunks = new Dictionary<int3, Chunk>();
+    public Dictionary<int3, ChunkMesh> chunkMeshes = new Dictionary<int3, ChunkMesh>();
 
     private HashSet<int3> activeChunks = new HashSet<int3>();
 
     public int3 playerChunkCoord;
     private int3 playerLastChunkCoord;
 
-    private List<Chunk> chunksToUpdate = new List<Chunk>();
-    public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
+    private List<int3> chunksToUpdate = new List<int3>();
+    public Queue<ChunkMesh> chunksToDraw = new Queue<ChunkMesh>();
 
     private bool inUI = false;
 
@@ -95,36 +95,42 @@ public class RimecraftWorld : MonoBehaviour
         }
     }
 
-    public void AddChunkToUpdate(Chunk chunk)
+    public void AddChunkToUpdate(int3 coord)
     {
-        AddChunkToUpdate(chunk, false);
+        AddChunkToUpdate(coord, false);
     }
 
-    public void AddChunkToUpdate(Chunk chunk, bool insert)
+    public void AddChunkToUpdate(int3 coord, bool insert)
     {
+        if (!chunkMeshes.ContainsKey(coord))
+        {
+            return;
+        }
         // Lock list to ensure only one thing is using the list at a time.
 
         // Make sure update list doesn't already contain chunk.
-        if (!chunksToUpdate.Contains(chunk))
+        if (chunksToUpdate.Contains(coord))
         {
-            // If insert is true, chunk gets inserted at the top of the list.
-            if (insert)
-            {
-                chunksToUpdate.Insert(0, chunk);
-            }
-            else
-            {
-                chunksToUpdate.Add(chunk);
-            }
+            return;
+        }
+
+        // If insert is true, chunk gets inserted at the top of the list.
+        if (insert)
+        {
+            chunksToUpdate.Insert(0, coord);
+        }
+        else
+        {
+            chunksToUpdate.Add(coord);
         }
     }
 
     private void UpdateChunks()
     {
-        chunksToUpdate[0].UpdateChunk();
-        if (!activeChunks.Contains(chunksToUpdate[0].coord))
+        chunkMeshes[chunksToUpdate[0]].UpdateChunk();
+        if (!activeChunks.Contains(chunksToUpdate[0]))
         {
-            activeChunks.Add(chunksToUpdate[0].coord);
+            activeChunks.Add(chunksToUpdate[0]);
         }
         chunksToUpdate.RemoveAt(0);
     }
@@ -146,18 +152,20 @@ public class RimecraftWorld : MonoBehaviour
             {
                 for (int z = coord.z, counterz = 1; z >= minimum.z && z < maximum.z; z += counterz * (int)math.pow(-1, counterz - 1), counterz++)
                 {
-                    int3 location = new int3(x, y, z);
-                    if (!chunks.ContainsKey(location))
+                    int3 newCoord = new int3(x, y, z);
+                    if (!chunkMeshes.ContainsKey(newCoord))
                     {
-                        chunks[location] = new Chunk(location);
+                        chunkMeshes[newCoord] = new ChunkMesh(newCoord);
+                        worldData.RequestChunk(newCoord, true);
+                        AddChunkToUpdate(newCoord);
                     }
 
-                    chunks[location].IsActive = true;
-                    activeChunks.Add(location);
+                    chunkMeshes[newCoord].IsActive = true;
+                    activeChunks.Add(newCoord);
 
                     for (int i = 0; i < previouslyActiveChunks.Count; i++)
                     {
-                        if (previouslyActiveChunks[i].Equals(location))
+                        if (previouslyActiveChunks[i].Equals(newCoord))
                         {
                             previouslyActiveChunks.RemoveAt(i);
                         }
@@ -170,7 +178,7 @@ public class RimecraftWorld : MonoBehaviour
         // distance, so loop through and disable them.
         foreach (int3 c in previouslyActiveChunks)
         {
-            chunks[new int3(c.x, c.y, c.z)].IsActive = false;
+            chunkMeshes[new int3(c.x, c.y, c.z)].IsActive = false;
         }
     }
 
@@ -192,7 +200,7 @@ public class RimecraftWorld : MonoBehaviour
                 for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
                 {
                     int3 location = new int3(x, y, z);
-                    if (!chunks.ContainsKey(location))
+                    if (!chunkMeshes.ContainsKey(location))
                     {
                         positions[usageCount] = location;
                         newChunks = true;
