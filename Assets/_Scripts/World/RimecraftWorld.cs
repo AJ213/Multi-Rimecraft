@@ -31,10 +31,6 @@ public class RimecraftWorld : MonoBehaviour
     private List<Chunk> chunksToUpdate = new List<Chunk>();
     public Queue<Chunk> chunksToDraw = new Queue<Chunk>();
 
-    private bool applyingModifications = false;
-
-    private static ConcurrentQueue<ConcurrentQueue<VoxelMod>> modifications = new ConcurrentQueue<ConcurrentQueue<VoxelMod>>();
-
     private bool inUI = false;
 
     private static RimecraftWorld instance;
@@ -52,11 +48,6 @@ public class RimecraftWorld : MonoBehaviour
         {
             instance = this;
         }
-    }
-
-    public static void EnqueueModification(ConcurrentQueue<VoxelMod> modification)
-    {
-        modifications.Enqueue(modification);
     }
 
     private void Start()
@@ -91,11 +82,6 @@ public class RimecraftWorld : MonoBehaviour
         {
             CheckLoadDistance();
             CheckViewDistance();
-        }
-
-        if (!applyingModifications)
-        {
-            ApplyModifications();
         }
 
         if (chunksToUpdate.Count > 0)
@@ -141,22 +127,6 @@ public class RimecraftWorld : MonoBehaviour
             activeChunks.Add(chunksToUpdate[0].coord);
         }
         chunksToUpdate.RemoveAt(0);
-    }
-
-    private void ApplyModifications()
-    {
-        applyingModifications = true;
-
-        while (modifications.Count > 0)
-        {
-            modifications.TryDequeue(out ConcurrentQueue<VoxelMod> queue);
-            while (queue.Count > 0)
-            {
-                queue.TryDequeue(out VoxelMod v);
-                worldData.SetVoxel(v.position, v.id);
-            }
-        }
-        applyingModifications = false;
     }
 
     private void CheckViewDistance()

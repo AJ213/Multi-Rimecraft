@@ -45,7 +45,7 @@ public class ChunkData
                 for (int z = 0; z < Constants.ChunkSizeZ; z++)
                 {
                     int3 localPosition = new int3(x, y, z);
-                    chunk.map[x, y, z] = new VoxelState(GenerateBlock.SamplePosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord), RimecraftWorld.Instance.biomes), localPosition);
+                    chunk.map[x, y, z] = new VoxelState(GenerateBlock.SamplePosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord), RimecraftWorld.Instance.biomes));
                 }
             }
         }
