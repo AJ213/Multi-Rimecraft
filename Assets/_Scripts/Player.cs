@@ -3,20 +3,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Mouse
-
-    [SerializeField] private float minimumY = -90F;
-    [SerializeField] private float maximumY = 90F;
-
-    private float rotationY = 0F;
-
     // Placing Blocks
-
     [SerializeField] private float checkIncrement = 0.01f;
     [SerializeField] private float reach = 8;
     [SerializeField] private Transform highlightBlock = null;
     [SerializeField] private Vector3 placeBlockPosition;
-    [SerializeField] private Transform weaponPosition;
 
     // Jumping and falling
     private ElipsoidRigidbody rbody;
@@ -35,7 +26,7 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed = 3;
     private float horizontal;
     private float vertical;
-
+    public GameObject debugScreen;
     [SerializeField] private SceneChanger sceneChanger = default;
 
     // Misc
@@ -60,6 +51,7 @@ public class Player : MonoBehaviour
                 rbody.CalculateVelocity(horizontal, vertical, walkSpeed);
             }
         }
+        highlightBlock.rotation = Quaternion.identity;
     }
 
     private void GetPlayerInputs()
@@ -164,19 +156,28 @@ public class Player : MonoBehaviour
     {
         rbody = this.gameObject.GetComponent<ElipsoidRigidbody>();
         cam = Camera.main.transform;
-        RimecraftWorld.Instance.InUI = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
+
+    private float mouseY;
 
     private void Update()
     {
-        float rotationX = cam.transform.localEulerAngles.y + (Input.GetAxis("Mouse X") * RimecraftWorld.settings.mouseSensitivity);
+        Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * RimecraftWorld.settings.mouseSensitivity * Time.deltaTime * 60;
+        mouseY += delta.y;
+        mouseY = Mathf.Clamp(mouseY, -89.99f, 89.99f);
+        Quaternion mouseRotationHorizontal = Quaternion.AngleAxis(delta.x, Vector3.up);
+        Quaternion mouseRotationVertical = Quaternion.AngleAxis(mouseY, -Vector3.right);
 
-        rotationY += Input.GetAxis("Mouse Y") * RimecraftWorld.settings.mouseSensitivity;
-        rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
+        cam.rotation = Quaternion.LookRotation(transform.forward, Vector3.up) * mouseRotationVertical;
+        transform.rotation = (Quaternion.LookRotation(transform.forward, Vector3.up) * mouseRotationHorizontal);
+        cam.position = new Vector3(transform.position.x, transform.position.y + 1.62f, transform.position.z - 0.15f);
 
-        cam.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
-        cam.transform.position = new Vector3(transform.position.x, transform.position.y + 1.62f, transform.position.z - 0.15f);
-        transform.localEulerAngles = new Vector3(0, cam.transform.localEulerAngles.y, 0);
+        if (Input.GetKeyDown(KeyCode.F3))
+        {
+            debugScreen.SetActive(!debugScreen.activeSelf);
+        }
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
