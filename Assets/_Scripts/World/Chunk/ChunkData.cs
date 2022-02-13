@@ -38,8 +38,6 @@ public class ChunkData
                 }
             }
         }
-
-        WorldData.AddToModifiedChunkList(chunk);
     }
 
     public void ModifyVoxel(int3 localPosition, ushort id, bool updateSurrounding = false)
@@ -50,15 +48,12 @@ public class ChunkData
         }
 
         map[localPosition.x, localPosition.y, localPosition.z] = id;
-        WorldData.AddToModifiedChunkList(this);
 
         RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
         if (updateSurrounding)
         {
             int3 globalPosition = WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord);
-            UpdateSorroundingVoxels(new int3(Mathf.FloorToInt(globalPosition.x),
-                                Mathf.FloorToInt(globalPosition.y),
-                                Mathf.FloorToInt(globalPosition.z)));
+            UpdateSorroundingVoxels(globalPosition);
         }
     }
 

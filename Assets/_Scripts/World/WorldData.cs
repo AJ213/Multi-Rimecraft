@@ -1,9 +1,5 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 using Unity.Mathematics;
-using Unity.Jobs;
-using Unity.Collections;
-using UnityEngine.UIElements;
 using System.Collections.Concurrent;
 
 [System.Serializable]
@@ -14,17 +10,6 @@ public class WorldData
 
     [System.NonSerialized]
     public static ConcurrentDictionary<int3, ChunkData> chunks = new ConcurrentDictionary<int3, ChunkData>();
-
-    [System.NonSerialized] // We use this as a ConcurrentSet, the byte does nothing
-    public static ConcurrentDictionary<ChunkData, byte> modifiedChunks = new ConcurrentDictionary<ChunkData, byte>();
-
-    public static void AddToModifiedChunkList(ChunkData chunk)
-    {
-        if (!modifiedChunks.ContainsKey(chunk))
-        {
-            modifiedChunks.TryAdd(chunk, 1);
-        }
-    }
 
     public WorldData(string name, int theSeed)
     {
@@ -68,7 +53,7 @@ public class WorldData
 
         int3 voxel = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
 
-        chunk.ModifyVoxel(voxel, value);
+        chunk.ModifyVoxel(voxel, value, true);
     }
 
     public ushort GetVoxel(int3 globalPosition)

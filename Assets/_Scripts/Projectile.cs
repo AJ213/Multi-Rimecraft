@@ -57,8 +57,7 @@ public class Projectile : MonoBehaviour
                 ChunkData chunk = WorldHelper.GetChunkFromPosition(breakBlock);
                 if (chunk != null)
                 {
-                    int3 localPos = WorldHelper.GetVoxelLocalPositionInChunk(breakBlock);
-                    chunk.ModifyVoxel(localPos, 0, true);
+                    RimecraftWorld.worldData.SetVoxel(breakBlock, 0);
                 }
 
                 if (blockBreakingID == 2)
