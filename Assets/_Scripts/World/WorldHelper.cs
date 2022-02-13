@@ -27,33 +27,6 @@ public static class WorldHelper
                         Mathf.FloorToInt(localPosition.z) + (Constants.ChunkSizeZ * coord.z));
     }
 
-    public static ChunkData GetChunkFromPosition(float3 globalPosition)
-    {
-        int3 coord = GetChunkCoordFromPosition(globalPosition);
-        if (WorldData.chunks.ContainsKey(coord))
-        {
-            return WorldData.chunks[GetChunkCoordFromPosition(globalPosition)];
-        }
-        else
-        {
-            //Debug.Log("Chunk doesn't exist at " + coord);
-            return null;
-        }
-    }
-
-    public static ushort GetVoxelFromPosition(float3 globalPosition)
-    {
-        ChunkData chunk = GetChunkFromPosition(globalPosition);
-        if (chunk == null)
-        {
-            return 0;
-        }
-        else
-        {
-            return chunk.VoxelFromPosition(GetVoxelLocalPositionInChunk(globalPosition));
-        }
-    }
-
     public static bool IsVoxelGlobalPositionInChunk(float3 globalPosition, int3 coord)
     {
         return ((float3)GetVoxelGlobalPositionFromChunk(GetVoxelLocalPositionInChunk(globalPosition), coord)).Equals(globalPosition);

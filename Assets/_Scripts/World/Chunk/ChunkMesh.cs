@@ -72,7 +72,7 @@ public class ChunkMesh
 
         for (int p = 0; p < 6; p++)
         {
-            ushort neighbor = WorldHelper.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
+            ushort neighbor = WorldData.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
             if (RimecraftWorld.Instance.blockTypes[neighbor].RenderNeighborFaces)
             {
                 int faceVertCount = 0;
