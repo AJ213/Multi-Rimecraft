@@ -110,7 +110,7 @@ public class Player : MonoBehaviour
                 if (toolbar.inventory.slots[toolbar.slotIndex].HasItem)
                 {
                     playerSounds.Play("BlockPlace");
-                    WorldHelper.GetChunkFromPosition(placeBlockPosition).EditVoxel(placeBlockPosition, toolbar.inventory.slots[toolbar.slotIndex].itemSlot.stack.id);
+                    WorldHelper.GetChunkFromPosition(placeBlockPosition).ModifyVoxel(placeBlockPosition.FloorToInt3(), toolbar.inventory.slots[toolbar.slotIndex].itemSlot.stack.id, true);
                     toolbar.inventory.slots[toolbar.slotIndex].itemSlot.Take(1);
                 }
             }

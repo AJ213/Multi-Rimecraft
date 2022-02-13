@@ -58,6 +58,7 @@ public class WorldData
         }
 
         chunks.TryAdd(coord, new ChunkData(coord));
+
         ChunkData.Populate(chunks[coord]);
     }
 
