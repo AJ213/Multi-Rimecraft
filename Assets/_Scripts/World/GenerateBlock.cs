@@ -18,7 +18,6 @@ public static class GenerateBlock
 
         SurfaceBlocks(ref voxelID, globalPosition, mainBiome, terrainHeight, 2, 15);
         LodeGeneration(ref voxelID, globalPosition, mainBiome);
-        FloraGeneration(globalPosition, mainBiome, terrainHeight);
 
         return voxelID;
     }
@@ -62,20 +61,6 @@ public static class GenerateBlock
                     {
                         voxelID = lode.blockID;
                     }
-                }
-            }
-        }
-    }
-
-    private static void FloraGeneration(int3 globalPosition, BiomeAttributes biome, int terrainHeight)
-    {
-        if (globalPosition.y == terrainHeight && biome.placeMajorFlora)
-        {
-            if (Noise.Get2DSimplex(new Vector2(globalPosition.x, globalPosition.z), 200, biome.majorFloraZoneScale) > biome.majorFloraZoneThreshold)
-            {
-                if (Noise.Get2DSimplex(new Vector2(globalPosition.x, globalPosition.z), 700, biome.majorFloraPlacementScale) > biome.majorFloraPlacementThreshold)
-                {
-                    RimecraftWorld.EnqueueModification(Structure.GenerateMajorFlora(biome.majorFloraIndex, globalPosition, biome.minHeight, biome.maxHeight));
                 }
             }
         }
