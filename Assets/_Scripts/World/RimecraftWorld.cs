@@ -5,23 +5,13 @@ using Unity.Jobs;
 using Unity.Collections;
 using System.Collections.Concurrent;
 
-public class RimecraftWorld : MonoBehaviour
+public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 {
     public static Settings settings;
     public BiomeAttributes[] biomes;
 
-    public bool JobsEnabled = false;
-
     public Transform player;
     public Vector3 spawnPosition;
-
-    public Material material = null;
-    public Material transparentMaterial = null;
-    public Material shinyMaterial = null;
-    public AllBlockTypes blockTypes = null;
-
-    [HideInInspector]
-    public Dictionary<int3, ChunkMesh> chunkMeshes = new Dictionary<int3, ChunkMesh>();
 
     private HashSet<int3> activeChunks = new HashSet<int3>();
 
@@ -29,26 +19,8 @@ public class RimecraftWorld : MonoBehaviour
     private int3 playerLastChunkCoord;
 
     private List<int3> chunksToUpdate = new List<int3>();
-    public Queue<ChunkMesh> chunksToDraw = new Queue<ChunkMesh>();
-
-    private bool inUI = false;
-
-    private static RimecraftWorld instance;
-    public static RimecraftWorld Instance => instance;
 
     public static WorldData worldData;
-
-    private void Awake()
-    {
-        if (instance != null && instance != this)
-        {
-            Destroy(this.gameObject);
-        }
-        else
-        {
-            instance = this;
-        }
-    }
 
     private void Start()
     {
@@ -58,17 +30,17 @@ public class RimecraftWorld : MonoBehaviour
         if (settings == null)
         {
             settings = new Settings();
-            settings.viewDistance = 2;
+            settings.viewDistance = 1;
             settings.mouseSensitivity = 2;
         }
 
         UnityEngine.Random.InitState(WorldData.seed);
-        Camera.main.farClipPlane = Mathf.Sqrt(2) * Constants.ChunkSizeX * 2 * settings.viewDistance;
+        Camera.main.farClipPlane = Mathf.Sqrt(2) * Constants.CHUNKSIZE * 2 * settings.viewDistance;
 
         spawnPosition = new Vector3(0, 5, 0);
         player = GameObject.FindGameObjectWithTag("Player").transform;
         player.position = spawnPosition;
-        CheckLoadDistance();
+        //CheckLoadDistance();
         CheckViewDistance();
 
         playerLastChunkCoord = WorldHelper.GetChunkCoordFromPosition(player.position);
@@ -80,7 +52,7 @@ public class RimecraftWorld : MonoBehaviour
 
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
         {
-            CheckLoadDistance();
+            //CheckLoadDistance();
             CheckViewDistance();
         }
 
@@ -88,16 +60,11 @@ public class RimecraftWorld : MonoBehaviour
         {
             UpdateChunks();
         }
-
-        if (chunksToDraw.Count > 0)
-        {
-            chunksToDraw.Dequeue().CreateMesh();
-        }
     }
 
     public void AddChunkToUpdate(int3 coord, bool insert = false)
     {
-        if (!chunkMeshes.ContainsKey(coord))
+        if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(coord))
         {
             return;
         }
@@ -122,7 +89,7 @@ public class RimecraftWorld : MonoBehaviour
 
     private void UpdateChunks()
     {
-        chunkMeshes[chunksToUpdate[0]].UpdateChunk();
+        ChunkMeshManager.Instance.chunkMeshes[chunksToUpdate[0]].UpdateChunk();
         if (!activeChunks.Contains(chunksToUpdate[0]))
         {
             activeChunks.Add(chunksToUpdate[0]);
@@ -148,14 +115,14 @@ public class RimecraftWorld : MonoBehaviour
                 for (int z = coord.z, counterz = 1; z >= minimum.z && z < maximum.z; z += counterz * (int)math.pow(-1, counterz - 1), counterz++)
                 {
                     int3 newCoord = new int3(x, y, z);
-                    if (!chunkMeshes.ContainsKey(newCoord))
+                    if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(newCoord))
                     {
-                        chunkMeshes[newCoord] = new ChunkMesh(newCoord);
-                        WorldData.RequestChunk(newCoord, true);
+                        ChunkMeshManager.Instance.chunkMeshes[newCoord] = new ChunkMesh(newCoord);
+                        WorldData.RequestChunk(newCoord, false);
                         AddChunkToUpdate(newCoord);
                     }
 
-                    chunkMeshes[newCoord].IsActive = true;
+                    ChunkMeshManager.Instance.chunkMeshes[newCoord].IsActive = true;
                     activeChunks.Add(newCoord);
 
                     for (int i = 0; i < previouslyActiveChunks.Count; i++)
@@ -173,7 +140,7 @@ public class RimecraftWorld : MonoBehaviour
         // distance, so loop through and disable them.
         foreach (int3 c in previouslyActiveChunks)
         {
-            chunkMeshes[new int3(c.x, c.y, c.z)].IsActive = false;
+            ChunkMeshManager.Instance.chunkMeshes[new int3(c.x, c.y, c.z)].IsActive = false;
         }
     }
 
@@ -195,7 +162,7 @@ public class RimecraftWorld : MonoBehaviour
                 for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
                 {
                     int3 location = new int3(x, y, z);
-                    if (!chunkMeshes.ContainsKey(location))
+                    if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(location))
                     {
                         positions[usageCount] = location;
                         newChunks = true;
@@ -205,73 +172,13 @@ public class RimecraftWorld : MonoBehaviour
             }
         }
 
-        if (JobsEnabled)
-        {
-            if (!newChunks)
-            {
-                // We don't want to bother loading jobs if there is nothing new to load
-                positions.Dispose();
-            }
-            else
-            {
-                var job = new LoadJob()
-                {
-                    positions = positions,
-                };
-                job.Schedule(usageCount, 2);
-                JobHandle.ScheduleBatchedJobs();
-            }
-        }
-        else
+        if (newChunks)
         {
             for (int i = 0; i < usageCount; i++)
             {
                 WorldData.LoadChunk(positions[i]);
             }
-            positions.Dispose();
         }
-    }
-
-    internal struct LoadJob : IJobParallelFor
-    {
-        [DeallocateOnJobCompletion] public NativeArray<int3> positions;
-
-        public void Execute(int i)
-        {
-            WorldData.LoadChunk(positions[i]);
-        }
-    }
-
-    public ushort CheckForVoxel(int3 globalPosition)
-    {
-        ushort voxel = worldData.GetVoxel(globalPosition);
-
-        if (blockTypes[voxel].IsSolid)
-        {
-            return voxel;
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    public bool InUI
-    {
-        get { return inUI; }
-        set
-        {
-            inUI = value;
-            if (inUI)
-            {
-                Cursor.lockState = CursorLockMode.None;
-                Cursor.visible = true;
-            }
-            else
-            {
-                Cursor.lockState = CursorLockMode.Locked;
-                Cursor.visible = false;
-            }
-        }
+        positions.Dispose();
     }
 }

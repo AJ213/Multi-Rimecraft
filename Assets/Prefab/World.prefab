@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4319930333665759203}
   - component: {fileID: 1397703395}
+  - component: {fileID: 2454200208309899372}
   m_Layer: 0
   m_Name: World
   m_TagString: Untagged
@@ -47,15 +48,25 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f7000ec52459bd74385c635a1ac7cacd, type: 2}
   - {fileID: 11400000, guid: f3fc626f9c391a440a35a9208c162ce8, type: 2}
   - {fileID: 11400000, guid: 2618c401e534fb1439cf1f6af9068789, type: 2}
-  JobsEnabled: 1
   player: {fileID: 0}
   spawnPosition: {x: 0, y: 0, z: 0}
-  material: {fileID: 2100000, guid: a2057a62d0e121f43922d28e5ccb4da9, type: 2}
-  transparentMaterial: {fileID: 2100000, guid: cca088c3de9907d43a823f0496b6a4aa, type: 2}
-  shinyMaterial: {fileID: 2100000, guid: a24803d6c8005254b9e8338db7fb7c22, type: 2}
-  blockTypes: {fileID: 11400000, guid: 82674fbc49e0dbd4c91789f489416d73, type: 2}
   playerChunkCoord:
     x: 0
     y: 0
     z: 0
-  debugScreen: {fileID: 0}
+--- !u!114 &2454200208309899372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4319930333665759205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 098b897d4bf9fdb4e8118ef556613c41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  material: {fileID: 2100000, guid: a2057a62d0e121f43922d28e5ccb4da9, type: 2}
+  transparentMaterial: {fileID: 2100000, guid: cca088c3de9907d43a823f0496b6a4aa, type: 2}
+  shinyMaterial: {fileID: 2100000, guid: a24803d6c8005254b9e8338db7fb7c22, type: 2}
+  blockTypes: {fileID: 11400000, guid: 82674fbc49e0dbd4c91789f489416d73, type: 2}

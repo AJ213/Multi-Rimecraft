@@ -271,7 +271,8 @@ public class Client : MonoBehaviour
             {(int)ServerPackets.welcome, ClientHandle.Welcome },
             {(int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             {(int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
-            {(int)ServerPackets.playerRotation, ClientHandle.PlayerRotation }
+            {(int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
+            {(int)ServerPackets.chunkData, ClientHandle.InitChunk }
         };
         Debug.Log("Initialized packets.");
     }

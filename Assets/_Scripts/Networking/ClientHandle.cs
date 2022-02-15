@@ -17,6 +17,13 @@ public class ClientHandle : MonoBehaviour
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
+    public static void InitChunk(Packet packet)
+    {
+        ChunkData data = packet.ReadChunkData();
+
+        WorldData.SetChunk(data);
+    }
+
     public static void SpawnPlayer(Packet packet)
     {
         int id = packet.ReadInt();
@@ -24,7 +31,7 @@ public class ClientHandle : MonoBehaviour
         Vector3 position = packet.ReadVector3();
         Quaternion rotation = packet.ReadQuaternion();
 
-        GameManager.instance.SpawnPlayer(id, username, position, rotation);
+        GameManager.Instance.SpawnPlayer(id, username, position, rotation);
     }
 
     public static void PlayerPosition(Packet packet)

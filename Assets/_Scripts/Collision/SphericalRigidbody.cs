@@ -15,11 +15,12 @@ public class SphericalRigidbody : MonoBehaviour
 
     private bool Colliding(int3 position)
     {
-        if (RimecraftWorld.Instance.CheckForVoxel(position) != 0)
+        ushort voxel = WorldData.CheckForVoxel(position);
+        bool result = voxel == 0;
+        if (!result)
         {
             lastCollidedWithBlockLocation = position;
         }
-        bool result = RimecraftWorld.Instance.CheckForVoxel(position) == 0;
 
         return !result;
     }
@@ -133,7 +134,7 @@ public class SphericalRigidbody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!RimecraftWorld.Instance.InUI)
+        if (!IGUIManager.Instance.InUI)
         {
             transform.Translate(velocity, Space.World);
         }

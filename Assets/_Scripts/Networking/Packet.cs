@@ -2,6 +2,7 @@ using System;
 using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
+using Unity.Mathematics;
 
 /// <summary>
 /// Sent from server to client.
@@ -11,7 +12,8 @@ public enum ServerPackets
     welcome = 1,
     spawnPlayer,
     playerPosition,
-    playerRotation
+    playerRotation,
+    chunkData
 }
 
 /// <summary>
@@ -165,6 +167,11 @@ public class Packet : IDisposable
         buffer.AddRange(BitConverter.GetBytes(value));
     }
 
+    public void Write(ushort value)
+    {
+        buffer.AddRange(BitConverter.GetBytes(value));
+    }
+
     /// <summary>
     /// Adds an int to the packet.
     /// </summary>
@@ -232,6 +239,22 @@ public class Packet : IDisposable
         Write(value.y);
         Write(value.z);
         Write(value.w);
+    }
+
+    public void Write(ChunkData data)
+    {
+        Write((float3)data.Coord);
+
+        for (int x = 0; x < Constants.CHUNKSIZE; x++)
+        {
+            for (int y = 0; y < Constants.CHUNKSIZE; y++)
+            {
+                for (int z = 0; z < Constants.CHUNKSIZE; z++)
+                {
+                    Write(data.map[x, y, z]);
+                }
+            }
+        }
     }
 
     #endregion Write Data
@@ -439,6 +462,43 @@ public class Packet : IDisposable
     public Quaternion ReadQuaternion(bool moveReadPos = true)
     {
         return new Quaternion(ReadFloat(moveReadPos), ReadFloat(moveReadPos), ReadFloat(moveReadPos), ReadFloat(moveReadPos));
+    }
+
+    public ushort ReadUShort(bool moveReadPos = true)
+    {
+        if (buffer.Count > readPos)
+        {
+            // If there are unread bytes
+            ushort _value = BitConverter.ToUInt16(readableBuffer, readPos); // Convert the bytes to a float
+            if (moveReadPos)
+            {
+                // If _moveReadPos is true
+                readPos += 2; // Increase readPos by 2
+            }
+            return _value; // Return the ushort
+        }
+        else
+        {
+            throw new Exception("Could not read value of type 'ushort'!");
+        }
+    }
+
+    public ChunkData ReadChunkData(bool moveReadPos = true)
+    {
+        Vector3 coord = ReadVector3(moveReadPos);
+
+        ChunkData data = new ChunkData(coord.FloorToInt3());
+        for (int x = 0; x < Constants.CHUNKSIZE; x++)
+        {
+            for (int y = 0; y < Constants.CHUNKSIZE; y++)
+            {
+                for (int z = 0; z < Constants.CHUNKSIZE; z++)
+                {
+                    data.map[x, y, z] = ReadUShort(moveReadPos);
+                }
+            }
+        }
+        return data;
     }
 
     #endregion Read Data

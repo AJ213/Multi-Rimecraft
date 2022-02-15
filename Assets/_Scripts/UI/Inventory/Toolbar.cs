@@ -4,21 +4,16 @@
 public class Toolbar : MonoBehaviour
 {
     public InventoryRow inventory;
-    public RectTransform highlight;
-    public Player player;
+    [SerializeField] private RectTransform highlight;
+    [SerializeField] private AudioManager playerSounds;
     public int slotIndex = 0;
-
-    private void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
-    }
 
     private void Update()
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel");
         if (scroll != 0)
         {
-            player.playerSounds.Play("ToolbarSwap");
+            playerSounds.Play("ToolbarSwap");
             if (scroll > 0)
             {
                 slotIndex--;

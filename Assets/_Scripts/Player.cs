@@ -17,7 +17,7 @@ public class Player : MonoBehaviour
 
     [SerializeField] private float jumpForce = 5;
     private bool jumpRequest;
-    public AudioManager playerSounds;
+    [SerializeField] private AudioManager playerSounds;
 
     // Moving
     [SerializeField] private bool isSprinting = false;
@@ -26,18 +26,18 @@ public class Player : MonoBehaviour
     [SerializeField] private float walkSpeed = 3;
     private float horizontal;
     private float vertical;
-    public GameObject debugScreen;
+    private float mouseY;
+
     [SerializeField] private SceneChanger sceneChanger = default;
 
     // Misc
 
     private Transform cam;
-    [SerializeField] public GameObject inventory = default;
 
     private void FixedUpdate()
     {
         ClientSend.PlayerMovement();
-        if (!RimecraftWorld.Instance.InUI)
+        if (!IGUIManager.Instance.InUI)
         {
             if (jumpRequest)
             {
@@ -106,7 +106,7 @@ public class Player : MonoBehaviour
             // Build Block
             if (Input.GetMouseButtonDown(1))
             {
-                Toolbar toolbar = inventory.GetComponent<Inventory>().toolbar;
+                Toolbar toolbar = IGUIManager.Instance.GetInventory.toolbar;
                 if (toolbar.inventory.slots[toolbar.slotIndex].HasItem)
                 {
                     playerSounds.Play("BlockPlace");
@@ -136,7 +136,7 @@ public class Player : MonoBehaviour
             float3 position = cam.position + (cam.forward * step);
             int3 roundedPosition = new int3(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y), Mathf.FloorToInt(position.z));
 
-            if (RimecraftWorld.Instance.CheckForVoxel(roundedPosition) != 0)
+            if (WorldData.CheckForVoxel(roundedPosition) != 0)
             {
                 highlightBlock.position = new float3(roundedPosition);
                 placeBlockPosition = lastPos;
@@ -162,8 +162,6 @@ public class Player : MonoBehaviour
         Cursor.visible = false;
     }
 
-    private float mouseY;
-
     private void Update()
     {
         Vector2 delta = new Vector2(Input.GetAxis("Mouse X"), Input.GetAxis("Mouse Y")) * RimecraftWorld.settings.mouseSensitivity * Time.deltaTime * 60;
@@ -176,23 +174,12 @@ public class Player : MonoBehaviour
         transform.rotation = (Quaternion.LookRotation(transform.forward, Vector3.up) * mouseRotationHorizontal);
         cam.position = new Vector3(transform.position.x, transform.position.y + 1.62f, transform.position.z - 0.15f);
 
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
-            debugScreen.SetActive(!debugScreen.activeSelf);
-        }
-
-        if (Input.GetKeyDown(KeyCode.Q))
-        {
-            RimecraftWorld.Instance.InUI = !RimecraftWorld.Instance.InUI;
-            inventory.GetComponent<Inventory>().storage.SetActive(RimecraftWorld.Instance.InUI);
-        }
-
         if (Input.GetKeyDown(KeyCode.R))
         {
             this.transform.position = RimecraftWorld.Instance.spawnPosition;
         }
 
-        if (!RimecraftWorld.Instance.InUI)
+        if (!IGUIManager.Instance.InUI)
         {
             GetPlayerInputs();
             PlaceCursorBlock();

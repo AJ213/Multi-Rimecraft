@@ -85,7 +85,7 @@ public class PlayAudioAtArea : MonoBehaviour
     {
         for (int i = 1; i <= height; i++)
         {
-            if (RimecraftWorld.Instance.CheckForVoxel((player.position + (Vector3.up * i)).FloorToInt3()) != 0)
+            if (WorldData.CheckForVoxel((player.position + (Vector3.up * i)).FloorToInt3()) != 0)
             {
                 return false;
             }

@@ -3,8 +3,6 @@ using UnityEngine;
 
 public static class VoxelData
 {
-    //public static int seed;
-
     public static readonly int TextureAtlasSizeInBlocks = 4;
 
     public static float NoramlizedBlockTextureSize
@@ -36,8 +34,7 @@ public static class VoxelData
 
     public static readonly int[,] voxelTris = new int[6, 4]
     {
-        // Back, Front, Top, Bottom, Left, Right
-        // 0 1 2 2 1 3
+        // Back, Front, Top, Bottom, Left, Right 0 1 2 2 1 3
         {0, 3, 1, 2}, // Back Face
         {5, 6, 4, 7}, // Front Face
         {3, 7, 2, 6}, // Top Face

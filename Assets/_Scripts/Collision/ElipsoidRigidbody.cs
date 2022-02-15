@@ -14,10 +14,10 @@ public class ElipsoidRigidbody : MonoBehaviour
 
     private bool Colliding(int3 position)
     {
-        bool result = RimecraftWorld.Instance.CheckForVoxel(position) == 0;
+        bool result = WorldData.CheckForVoxel(position) == 0;
         for (int i = 1; i <= (int)objectHeight; i++)
         {
-            result &= RimecraftWorld.Instance.CheckForVoxel(position + new int3(0, i, 0)) == 0;
+            result &= WorldData.CheckForVoxel(position + new int3(0, i, 0)) == 0;
         }
         return !result;
     }
@@ -109,10 +109,10 @@ public class ElipsoidRigidbody : MonoBehaviour
 
     public bool ObjectObstructedVerticallyAt(float height)
     {
-        return !(RimecraftWorld.Instance.CheckForVoxel(ObjectWidthBlockLocations(0, height)) == 0 &&
-            RimecraftWorld.Instance.CheckForVoxel(ObjectWidthBlockLocations(1, height)) == 0 &&
-            RimecraftWorld.Instance.CheckForVoxel(ObjectWidthBlockLocations(2, height)) == 0 &&
-            RimecraftWorld.Instance.CheckForVoxel(ObjectWidthBlockLocations(3, height)) == 0);
+        return !(WorldData.CheckForVoxel(ObjectWidthBlockLocations(0, height)) == 0 &&
+            WorldData.CheckForVoxel(ObjectWidthBlockLocations(1, height)) == 0 &&
+            WorldData.CheckForVoxel(ObjectWidthBlockLocations(2, height)) == 0 &&
+            WorldData.CheckForVoxel(ObjectWidthBlockLocations(3, height)) == 0);
     }
 
     private void OnDrawGizmos()
@@ -151,7 +151,7 @@ public class ElipsoidRigidbody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!RimecraftWorld.Instance.InUI)
+        if (!IGUIManager.Instance.InUI)
         {
             transform.Translate(velocity, Space.World);
         }
