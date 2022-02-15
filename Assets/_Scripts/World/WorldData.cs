@@ -40,9 +40,23 @@ public class WorldData
         return RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), create);
     }
 
+    public static ushort CheckForVoxel(int3 globalPosition)
+    {
+        ushort voxel = GetVoxel(globalPosition);
+
+        if (ChunkMeshManager.Instance.blockTypes[voxel].IsSolid)
+        {
+            return voxel;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     public static ushort GetVoxelFromPosition(float3 globalPosition)
     {
-        ChunkData chunk = RequestChunkViaGlobalPosition((int3)globalPosition, true);
+        ChunkData chunk = RequestChunkViaGlobalPosition((int3)globalPosition, false);
         if (chunk == null)
         {
             return 0;
@@ -65,16 +79,21 @@ public class WorldData
         ChunkData.Populate(chunks[coord]);
     }
 
+    public static void SetChunk(ChunkData chunk)
+    {
+        chunks.TryAdd(chunk.Coord, chunk);
+    }
+
     public void SetVoxel(int3 globalPosition, ushort value)
     {
-        ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), true);
+        ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
 
         int3 voxel = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
 
         chunk.ModifyVoxel(voxel, value, true);
     }
 
-    public ushort GetVoxel(int3 globalPosition)
+    public static ushort GetVoxel(int3 globalPosition)
     {
         ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
         if (chunk == null)

@@ -8,7 +8,7 @@ public static class Noise
         position.x += offset + WorldData.seed;
         position.y += offset + WorldData.seed;
 
-        float simplexNoise = noise.cnoise(new float2(position.x / Constants.ChunkSizeX * scale, position.y / Constants.ChunkSizeZ * scale));
+        float simplexNoise = noise.cnoise(new float2(position.x / Constants.CHUNKSIZE * scale, position.y / Constants.CHUNKSIZE * scale));
         return simplexNoise;
     }
 

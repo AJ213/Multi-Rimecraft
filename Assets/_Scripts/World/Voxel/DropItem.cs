@@ -46,7 +46,7 @@ public class DropItem : MonoBehaviour
 
     private void PickupItem()
     {
-        bool success = player.GetComponent<Player>().inventory.GetComponent<Inventory>().TryAdd(ref items);
+        bool success = IGUIManager.Instance.GetInventory.TryAdd(ref items);
         if (success)
         {
             Destroy(this.gameObject);

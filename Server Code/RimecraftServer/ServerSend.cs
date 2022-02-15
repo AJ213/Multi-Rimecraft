@@ -86,6 +86,19 @@ namespace RimecraftServer
             }
         }
 
+        public static void SendInitialChunks(int toClient, WorldData worldData)
+        {
+            foreach (ChunkData data in worldData.Chunks.Values)
+            {
+                using (Packet packet = new Packet((int)ServerPackets.chunkData))
+                {
+                    packet.Write(data);
+
+                    SendTCPData(toClient, packet);
+                }
+            }
+        }
+
         public static void PlayerPosition(Player player)
         {
             using (Packet packet = new Packet((int)ServerPackets.playerPosition))
@@ -106,6 +119,10 @@ namespace RimecraftServer
 
                 SendUDPDataToAll(player.id, packet);
             }
+        }
+
+        public static void ChunkUpdate(Player player)
+        {
         }
 
         #endregion Packets

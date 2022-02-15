@@ -19,7 +19,7 @@ public class DragAndDropHandler : MonoBehaviour
 
     private void Update()
     {
-        if (!RimecraftWorld.Instance.InUI)
+        if (!IGUIManager.Instance.InUI)
         {
             return;
         }

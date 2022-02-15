@@ -30,13 +30,13 @@ public class ChunkMesh
         meshFilter = chunkObject.AddComponent<MeshFilter>();
         meshRenderer = chunkObject.AddComponent<MeshRenderer>();
 
-        materials[0] = RimecraftWorld.Instance.material;
-        materials[1] = RimecraftWorld.Instance.transparentMaterial;
-        materials[2] = RimecraftWorld.Instance.shinyMaterial;
+        materials[0] = ChunkMeshManager.Instance.material;
+        materials[1] = ChunkMeshManager.Instance.transparentMaterial;
+        materials[2] = ChunkMeshManager.Instance.shinyMaterial;
         meshRenderer.materials = materials;
 
         chunkObject.transform.SetParent(RimecraftWorld.Instance.transform);
-        chunkObject.transform.position = new Vector3(coord.x * Constants.ChunkSizeX, coord.y * Constants.ChunkSizeY, coord.z * Constants.ChunkSizeZ);
+        chunkObject.transform.position = new Vector3(coord.x * Constants.CHUNKSIZE, coord.y * Constants.CHUNKSIZE, coord.z * Constants.CHUNKSIZE);
         chunkObject.name = "Chunk " + coord.x + ", " + coord.y + "," + coord.z;
         position = new int3(Mathf.FloorToInt(chunkObject.transform.position.x), Mathf.FloorToInt(chunkObject.transform.position.y), Mathf.FloorToInt(chunkObject.transform.position.z));
     }
@@ -46,15 +46,15 @@ public class ChunkMesh
         if (WorldData.chunks[coord] != null)
         {
             ClearMeshData();
-            for (int y = 0; y < Constants.ChunkSizeY; y++)
+            for (int y = 0; y < Constants.CHUNKSIZE; y++)
             {
-                for (int x = 0; x < Constants.ChunkSizeX; x++)
+                for (int x = 0; x < Constants.CHUNKSIZE; x++)
                 {
-                    for (int z = 0; z < Constants.ChunkSizeZ; z++)
+                    for (int z = 0; z < Constants.CHUNKSIZE; z++)
                     {
-                        if (RimecraftWorld.Instance.blockTypes[WorldData.chunks[coord].map[x, y, z]] != null)
+                        if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord].map[x, y, z]] != null)
                         {
-                            if (RimecraftWorld.Instance.blockTypes[WorldData.chunks[coord].map[x, y, z]].IsSolid)
+                            if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord].map[x, y, z]].IsSolid)
                             {
                                 UpdateMeshData(new int3(x, y, z));
                             }
@@ -62,7 +62,7 @@ public class ChunkMesh
                     }
                 }
             }
-            RimecraftWorld.Instance.chunksToDraw.Enqueue(this);
+            ChunkMeshManager.Instance.chunksToDraw.Enqueue(this);
         }
     }
 
@@ -73,37 +73,37 @@ public class ChunkMesh
         for (int p = 0; p < 6; p++)
         {
             ushort neighbor = WorldData.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
-            if (RimecraftWorld.Instance.blockTypes[neighbor].RenderNeighborFaces)
+            if (ChunkMeshManager.Instance.blockTypes[neighbor].RenderNeighborFaces)
             {
                 int faceVertCount = 0;
-                for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].vertData.Length; i++)
+                for (int i = 0; i < ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].vertData.Length; i++)
                 {
-                    vertices.Add(localPosition + (float3)RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].position);
-                    normals.Add(RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].normal);
-                    AddTexture(RimecraftWorld.Instance.blockTypes[voxel].GetTextureID(p), RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].uv);
+                    vertices.Add(localPosition + (float3)ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].position);
+                    normals.Add(ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].normal);
+                    AddTexture(ChunkMeshManager.Instance.blockTypes[voxel].GetTextureID(p), ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].uv);
                     faceVertCount++;
                 }
 
                 // spaghetti ice reflection programming
                 if (voxel == 2)
                 {
-                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
                     {
-                        shinyTriangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
+                        shinyTriangles.Add(vertexIndex + ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
                     }
                 }
-                else if (!RimecraftWorld.Instance.blockTypes[voxel].RenderNeighborFaces)
+                else if (!ChunkMeshManager.Instance.blockTypes[voxel].RenderNeighborFaces)
                 {
-                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
                     {
-                        triangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
+                        triangles.Add(vertexIndex + ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
                     }
                 }
                 else
                 {
-                    for (int i = 0; i < RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
+                    for (int i = 0; i < ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].triangles.Length; i++)
                     {
-                        transparentTriangles.Add(vertexIndex + RimecraftWorld.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
+                        transparentTriangles.Add(vertexIndex + ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].triangles[i]);
                     }
                 }
 

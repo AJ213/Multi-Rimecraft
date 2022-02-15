@@ -5,24 +5,10 @@ using UnityEngine.UI;
 using TMPro;
 using UnityEngine.SceneManagement;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviourSingleton<UIManager>
 {
-    public static UIManager instance;
-
     public GameObject startMenu;
     public TMP_InputField usernameField;
-
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(this);
-        }
-    }
 
     public void ConnectToServer()
     {
