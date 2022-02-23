@@ -37,7 +37,10 @@ namespace RimecraftServer
                 {
                     for (int z = 0; z < Constants.CHUNKSIZE; z++)
                     {
-                        chunk.map[x, y, z] = GenerateBlock.GenerateFlatGround(WorldHelper.GetVoxelGlobalPositionFromChunk(new Vector3(x, y, z), chunk.Coord));
+                        Vector3 localPosition = new Vector3(x, y, z);
+                        Vector3 globalPosition = WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord);
+                        chunk.map[x, y, z] = GenerateBlock.SamplePosition(globalPosition, Program.worldData.biomes, Program.worldData.NoiseGeneration);
+                        //chunk.map[x, y, z] = GenerateBlock.GenerateFlatGround(WorldHelper.GetVoxelGlobalPositionFromChunk(new Vector3(x, y, z), chunk.Coord));
                     }
                 }
             }

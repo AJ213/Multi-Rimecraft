@@ -23,7 +23,7 @@ namespace RimecraftServer
             BiomeAttributes mainBiome = biomes[0];
             for (int i = 0; i < biomes.Length; i++)
             {
-                terrainHeight += (int)Math.Floor(biomes[i].terrainHeight * noise.Get2DSimplex(globalPosition.X, globalPosition.Z, 2 * biomes[i].offset, biomes[i].terrainScale));
+                terrainHeight += (int)Math.Floor(biomes[i].terrainHeight * noise.Octave2DSimplex(globalPosition.X, globalPosition.Z, 2 * biomes[i].offset, biomes[i].terrainScale, biomes[i].octaves, biomes[i].persistence));
             }
             terrainHeight /= biomes.Length;
 
