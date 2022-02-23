@@ -87,6 +87,18 @@ namespace RimecraftServer
             }
         }
 
+        public static void DroppedItem(int fromClient, Vector3 position, ushort id, string uuid)
+        {
+            using (Packet packet = new Packet((int)ServerPackets.droppedItem))
+            {
+                packet.Write(position);
+                packet.Write(id);
+                packet.Write(uuid);
+
+                SendTCPDataToAll(fromClient, packet);
+            }
+        }
+
         public static void SpawnProjectile(int fromClient, Vector3 position, Vector3 direction)
         {
             using (Packet packet = new Packet((int)ServerPackets.spawnProjectile))
@@ -107,13 +119,24 @@ namespace RimecraftServer
             }
         }
 
-        public static void ModifiedVoxel(Vector3 globalPosition)
+        public static void PickupItem(int fromClient, string uuid)
+        {
+            using (Packet packet = new Packet((int)ServerPackets.pickupItem))
+            {
+                packet.Write(uuid);
+
+                SendTCPDataToAll(fromClient, packet);
+            }
+        }
+
+        public static void ModifiedVoxel(int fromClient, Vector3 globalPosition, ushort id)
         {
             using (Packet packet = new Packet((int)ServerPackets.modifiedVoxel))
             {
                 packet.Write(globalPosition);
+                packet.Write(id);
 
-                SendTCPDataToAll(packet);
+                SendTCPDataToAll(fromClient, packet);
             }
         }
 

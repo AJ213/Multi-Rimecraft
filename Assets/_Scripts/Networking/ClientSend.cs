@@ -73,5 +73,27 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void PickupItem(string uuid)
+    {
+        using (Packet packet = new Packet((int)ClientPackets.pickupItem))
+        {
+            packet.Write(uuid);
+
+            SendTCPData(packet);
+        }
+    }
+
+    public static void DroppedItem(Vector3 position, ushort id, string uuid)
+    {
+        using (Packet packet = new Packet((int)ClientPackets.droppedItem))
+        {
+            packet.Write(position);
+            packet.Write(id);
+            packet.Write(uuid);
+
+            SendTCPData(packet);
+        }
+    }
+
     #endregion Packets
 }

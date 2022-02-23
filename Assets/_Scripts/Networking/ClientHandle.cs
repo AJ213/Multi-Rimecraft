@@ -52,7 +52,18 @@ public class ClientHandle : MonoBehaviour
     public static void ModifiedVoxel(Packet packet)
     {
         Vector3 globalPosition = packet.ReadVector3();
+        ushort id = packet.ReadUShort();
+
         WorldData.UpdateSorroundingVoxels(globalPosition.FloorToInt3());
+    }
+
+    public static void DroppedItem(Packet packet)
+    {
+        Vector3 globalPosition = packet.ReadVector3();
+        ushort id = packet.ReadUShort();
+        string uuid = packet.ReadString();
+
+        DropItem.TrySpawnDropItem(id, globalPosition, uuid);
     }
 
     public static void SpawnProjectile(Packet packet)
@@ -60,5 +71,12 @@ public class ClientHandle : MonoBehaviour
         Vector3 position = packet.ReadVector3();
         Vector3 direction = packet.ReadVector3();
         Projectile.SpawnProjectile(position, direction, false);
+    }
+
+    public static void PickupItem(Packet packet)
+    {
+        string uuid = packet.ReadString();
+        DropItem.DestroyItemWithID(uuid);
+        Debug.Log("destroying item with uuid " + uuid);
     }
 }

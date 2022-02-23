@@ -275,6 +275,8 @@ public class Client : MonoBehaviour
             {(int)ServerPackets.chunkData, ClientHandle.SetChunk },
             {(int)ServerPackets.modifiedVoxel, ClientHandle.ModifiedVoxel },
             {(int)ServerPackets.spawnProjectile, ClientHandle.SpawnProjectile },
+            {(int)ServerPackets.pickupItem, ClientHandle.PickupItem },
+            {(int)ServerPackets.droppedItem, ClientHandle.DroppedItem }
         };
         Debug.Log("Initialized packets.");
     }
