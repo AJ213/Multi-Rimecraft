@@ -16,7 +16,9 @@ namespace RimecraftServer
         playerRotation,
         chunkData,
         modifiedVoxel,
-        spawnProjectile
+        spawnProjectile,
+        pickupItem,
+        droppedItem
     }
 
     /// <summary>
@@ -28,7 +30,9 @@ namespace RimecraftServer
         playerMovement,
         requestChunk,
         modifyVoxel,
-        spawnProjectile
+        spawnProjectile,
+        pickupItem,
+        droppedItem
     }
 
     public class Packet : IDisposable

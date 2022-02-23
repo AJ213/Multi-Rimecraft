@@ -9,6 +9,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 {
     public static Settings settings;
     public BiomeAttributes[] biomes;
+    public GameObject[] sounds;
 
     public Transform player;
     public Vector3 spawnPosition;

@@ -38,12 +38,12 @@ namespace RimecraftServer
             }
         }
 
-        public void SetVoxel(Vector3 globalPosition, ushort value)
+        public void SetVoxel(int fromClient, Vector3 globalPosition, ushort value)
         {
-            ServerSend.ModifiedVoxel(globalPosition);
             ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
-
             Vector3 localPosition = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
+
+            ServerSend.ModifiedVoxel(fromClient, globalPosition, value);
             chunk.ModifyVoxel(localPosition, value);
         }
 

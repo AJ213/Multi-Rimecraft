@@ -37,6 +37,15 @@ namespace RimecraftServer
             ServerSend.SpawnProjectile(fromClient, position, direction);
         }
 
+        public static void DroppedItem(int fromClient, Packet packet)
+        {
+            Vector3 position = packet.ReadVector3();
+            ushort id = packet.ReadUShort();
+            string uuid = packet.ReadString();
+
+            ServerSend.DroppedItem(fromClient, position, id, uuid);
+        }
+
         public static void RequestChunk(int fromClient, Packet packet)
         {
             Vector3 coord = packet.ReadVector3();
@@ -50,7 +59,14 @@ namespace RimecraftServer
             ushort blockID = packet.ReadUShort();
 
             // Will then send the modified chunk data to all
-            Program.worldData.SetVoxel(globalPosition, blockID);
+            Program.worldData.SetVoxel(fromClient, globalPosition, blockID);
+        }
+
+        public static void PickupItem(int fromClient, Packet packet)
+        {
+            string uuid = packet.ReadString();
+
+            ServerSend.PickupItem(fromClient, uuid);
         }
     }
 }
