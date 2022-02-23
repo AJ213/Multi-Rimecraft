@@ -43,7 +43,7 @@ namespace RimecraftServer
             }
         }
 
-        public void ModifyVoxel(Vector3 localPosition, ushort id, bool updateSurrounding = false)
+        public void ModifyVoxel(Vector3 localPosition, ushort id)
         {
             if (VoxelFromPosition(localPosition) == id)
             {
@@ -52,29 +52,7 @@ namespace RimecraftServer
 
             SetVoxelFromPosition(localPosition, id);
 
-            //RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
-            if (updateSurrounding)
-            {
-                Vector3 globalPosition = WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord);
-                UpdateSorroundingVoxels(globalPosition);
-            }
-        }
-
-        private void UpdateSorroundingVoxels(Vector3 globalPos)
-        {
-            for (int p = 0; p < 6; p++)
-            {
-                Vector3 currentVoxel = globalPos + VoxelData.faceChecks[p];
-
-                if (!WorldHelper.IsVoxelGlobalPositionInChunk(currentVoxel, coord))
-                {
-                    Vector3 coord = WorldHelper.GetChunkCoordFromPosition(currentVoxel);
-                    //if (ChunkMeshManager.Instance.chunkMeshes.ContainsKey(coord))
-                    //{
-                    //RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
-                    //}
-                }
-            }
+            ServerSend.SendChunkToAll(this);
         }
 
         public ushort VoxelFromPosition(Vector3 localPosition)

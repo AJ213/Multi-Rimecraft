@@ -86,16 +86,31 @@ namespace RimecraftServer
             }
         }
 
-        public static void SendInitialChunks(int toClient, WorldData worldData)
+        public static void SendInitialChunks(int toClient)
         {
-            foreach (ChunkData data in worldData.Chunks.Values)
+            foreach (ChunkData data in Program.worldData.Chunks.Values)
             {
-                using (Packet packet = new Packet((int)ServerPackets.chunkData))
-                {
-                    packet.Write(data);
+                SendChunk(toClient, data);
+            }
+        }
 
-                    SendTCPData(toClient, packet);
-                }
+        public static void SendChunk(int toClient, ChunkData chunk)
+        {
+            using (Packet packet = new Packet((int)ServerPackets.chunkData))
+            {
+                packet.Write(chunk);
+
+                SendTCPData(toClient, packet);
+            }
+        }
+
+        public static void SendChunkToAll(ChunkData chunk)
+        {
+            using (Packet packet = new Packet((int)ServerPackets.chunkData))
+            {
+                packet.Write(chunk);
+
+                SendTCPDataToAll(packet);
             }
         }
 

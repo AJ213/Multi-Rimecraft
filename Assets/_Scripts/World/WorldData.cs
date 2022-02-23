@@ -26,7 +26,8 @@ public class WorldData
 
         if (create)
         {
-            LoadChunk(coord);
+            ClientSend.RequestChunk((float3)coord);
+            Debug.Log("will the chunk arrive in time? is chunk null?" + chunks[coord] == null);
             return chunks[coord];
         }
         else
@@ -67,30 +68,24 @@ public class WorldData
         }
     }
 
-    public static void LoadChunk(int3 coord)
-    {
-        if (chunks.ContainsKey(coord))
-        {
-            return;
-        }
-
-        chunks.TryAdd(coord, new ChunkData(coord));
-
-        ChunkData.Populate(chunks[coord]);
-    }
-
     public static void SetChunk(ChunkData chunk)
     {
-        chunks.TryAdd(chunk.Coord, chunk);
+        if (chunks.ContainsKey(chunk.Coord))
+        {
+            // Maybe remove and then add?
+            chunks[chunk.Coord] = chunk;
+            RimecraftWorld.Instance.AddChunkToUpdate(chunk.Coord);
+        }
+        else
+        {
+            chunks.TryAdd(chunk.Coord, chunk);
+            RimecraftWorld.Instance.AddChunkToUpdate(chunk.Coord);
+        }
     }
 
     public void SetVoxel(int3 globalPosition, ushort value)
     {
-        ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
-
-        int3 voxel = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
-
-        chunk.ModifyVoxel(voxel, value, true);
+        ClientSend.ModifyVoxelChunk(globalPosition, value);
     }
 
     public static ushort GetVoxel(int3 globalPosition)

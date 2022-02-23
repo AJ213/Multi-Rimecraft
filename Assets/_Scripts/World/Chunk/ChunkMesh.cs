@@ -43,7 +43,7 @@ public class ChunkMesh
 
     public void UpdateChunk()
     {
-        if (WorldData.chunks[coord] != null)
+        if (WorldData.chunks.ContainsKey(coord) && WorldData.chunks[coord] != null)
         {
             ClearMeshData();
             for (int y = 0; y < Constants.CHUNKSIZE; y++)

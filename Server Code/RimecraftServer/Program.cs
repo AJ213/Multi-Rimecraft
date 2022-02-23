@@ -20,16 +20,6 @@ namespace RimecraftServer
 
             int seed = 0;
             worldData = new WorldData(seed);
-            for (int x = -1; x < 3; x++)
-            {
-                for (int y = -1; y < 3; y++)
-                {
-                    for (int z = -1; z < 3; z++)
-                    {
-                        worldData.LoadChunk(new Vector3(x, y, z));
-                    }
-                }
-            }
 
             Server.Start(50, 26950);
         }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
 
 public class ClientSend : MonoBehaviour
@@ -37,6 +38,27 @@ public class ClientSend : MonoBehaviour
             packet.Write(GameManager.players[Client.instance.myId].transform.rotation);
 
             SendUDPData(packet);
+        }
+    }
+
+    public static void RequestChunk(Vector3 coord)
+    {
+        using (Packet packet = new Packet((int)ClientPackets.requestChunk))
+        {
+            packet.Write(coord);
+
+            SendTCPData(packet);
+        }
+    }
+
+    public static void ModifyVoxelChunk(int3 globalPosition, ushort blockId)
+    {
+        using (Packet packet = new Packet((int)ClientPackets.modifyVoxel))
+        {
+            packet.Write((float3)globalPosition);
+            packet.Write(blockId);
+
+            SendTCPData(packet);
         }
     }
 

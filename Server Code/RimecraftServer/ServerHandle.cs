@@ -23,16 +23,26 @@ namespace RimecraftServer
 
         public static void PlayerMovement(int fromClient, Packet packet)
         {
-            /*bool[] inputs = new bool[packet.ReadInt()];
-            for (int i = 0; i < inputs.Length; i++)
-            {
-                inputs[i] = packet.ReadBool();
-            }*/
             Vector3 position = packet.ReadVector3();
             Quaternion rotation = packet.ReadQuaternion();
 
             Server.clients[fromClient].player.SetInput(position, rotation);
-            //Server.clients[fromClient].player.SetInput(_inputs, rotation);
+        }
+
+        public static void RequestChunk(int fromClient, Packet packet)
+        {
+            Vector3 coord = packet.ReadVector3();
+            ChunkData data = Program.worldData.RequestChunk(coord, true);
+            ServerSend.SendChunk(fromClient, data);
+        }
+
+        public static void ModifyVoxel(int fromClient, Packet packet)
+        {
+            Vector3 globalPosition = packet.ReadVector3();
+            ushort blockID = packet.ReadUShort();
+
+            // Will then send the modified chunk data to all
+            Program.worldData.SetVoxel(globalPosition, blockID);
         }
     }
 }
