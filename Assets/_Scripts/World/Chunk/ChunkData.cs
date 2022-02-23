@@ -40,40 +40,6 @@ public class ChunkData
         }
     }
 
-    public void ModifyVoxel(int3 localPosition, ushort id, bool updateSurrounding = false)
-    {
-        if (map[localPosition.x, localPosition.y, localPosition.z] == id)
-        {
-            return;
-        }
-
-        map[localPosition.x, localPosition.y, localPosition.z] = id;
-
-        RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
-        if (updateSurrounding)
-        {
-            int3 globalPosition = WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord);
-            UpdateSorroundingVoxels(globalPosition);
-        }
-    }
-
-    private void UpdateSorroundingVoxels(int3 globalPosition)
-    {
-        for (int p = 0; p < 6; p++)
-        {
-            int3 currentVoxel = globalPosition + VoxelData.faceChecks[p];
-
-            if (!WorldHelper.IsVoxelGlobalPositionInChunk(currentVoxel, coord))
-            {
-                int3 coord = WorldHelper.GetChunkCoordFromPosition(currentVoxel);
-                if (ChunkMeshManager.Instance.chunkMeshes.ContainsKey(coord))
-                {
-                    RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
-                }
-            }
-        }
-    }
-
     public ushort VoxelFromPosition(int3 localPosition)
     {
         return map[localPosition.x, localPosition.y, localPosition.z];

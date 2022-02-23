@@ -114,10 +114,11 @@ namespace RimecraftServer
 
             packetHandlers = new Dictionary<int, PacketHandler>()
             {
-                {(int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
+                { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
                 { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
                 { (int)ClientPackets.requestChunk, ServerHandle.RequestChunk },
-                { (int)ClientPackets.modifyVoxel, ServerHandle.ModifyVoxel }
+                { (int)ClientPackets.modifyVoxel, ServerHandle.ModifyVoxel },
+                 { (int)ClientPackets.spawnProjectile, ServerHandle.SpawnProjectile }
             };
             Console.WriteLine("Initialized packets.");
         }

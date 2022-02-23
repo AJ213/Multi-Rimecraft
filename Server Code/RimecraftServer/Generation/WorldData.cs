@@ -40,10 +40,10 @@ namespace RimecraftServer
 
         public void SetVoxel(Vector3 globalPosition, ushort value)
         {
+            ServerSend.ModifiedVoxel(globalPosition);
             ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
 
             Vector3 localPosition = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
-
             chunk.ModifyVoxel(localPosition, value);
         }
 

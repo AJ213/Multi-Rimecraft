@@ -48,4 +48,17 @@ public class ClientHandle : MonoBehaviour
 
         GameManager.players[id].transform.rotation = rotation;
     }
+
+    public static void ModifiedVoxel(Packet packet)
+    {
+        Vector3 globalPosition = packet.ReadVector3();
+        WorldData.UpdateSorroundingVoxels(globalPosition.FloorToInt3());
+    }
+
+    public static void SpawnProjectile(Packet packet)
+    {
+        Vector3 position = packet.ReadVector3();
+        Vector3 direction = packet.ReadVector3();
+        Projectile.SpawnProjectile(position, direction, false);
+    }
 }

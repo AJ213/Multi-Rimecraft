@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Numerics;
 
 namespace RimecraftServer
 {
@@ -86,11 +87,13 @@ namespace RimecraftServer
             }
         }
 
-        public static void SendInitialChunks(int toClient)
+        public static void SpawnProjectile(int fromClient, Vector3 position, Vector3 direction)
         {
-            foreach (ChunkData data in Program.worldData.Chunks.Values)
+            using (Packet packet = new Packet((int)ServerPackets.spawnProjectile))
             {
-                SendChunk(toClient, data);
+                packet.Write(position);
+                packet.Write(direction);
+                SendTCPDataToAll(fromClient, packet);
             }
         }
 
@@ -101,6 +104,16 @@ namespace RimecraftServer
                 packet.Write(chunk);
 
                 SendTCPData(toClient, packet);
+            }
+        }
+
+        public static void ModifiedVoxel(Vector3 globalPosition)
+        {
+            using (Packet packet = new Packet((int)ServerPackets.modifiedVoxel))
+            {
+                packet.Write(globalPosition);
+
+                SendTCPDataToAll(packet);
             }
         }
 
@@ -134,10 +147,6 @@ namespace RimecraftServer
 
                 SendUDPDataToAll(player.id, packet);
             }
-        }
-
-        public static void ChunkUpdate(Player player)
-        {
         }
 
         #endregion Packets

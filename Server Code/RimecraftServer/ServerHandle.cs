@@ -29,6 +29,14 @@ namespace RimecraftServer
             Server.clients[fromClient].player.SetInput(position, rotation);
         }
 
+        public static void SpawnProjectile(int fromClient, Packet packet)
+        {
+            Vector3 position = packet.ReadVector3();
+            Vector3 direction = packet.ReadVector3();
+
+            ServerSend.SpawnProjectile(fromClient, position, direction);
+        }
+
         public static void RequestChunk(int fromClient, Packet packet)
         {
             Vector3 coord = packet.ReadVector3();

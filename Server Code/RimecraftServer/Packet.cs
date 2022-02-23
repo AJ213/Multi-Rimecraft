@@ -15,6 +15,8 @@ namespace RimecraftServer
         playerPosition,
         playerRotation,
         chunkData,
+        modifiedVoxel,
+        spawnProjectile
     }
 
     /// <summary>
@@ -25,7 +27,8 @@ namespace RimecraftServer
         welcomeReceived = 1,
         playerMovement,
         requestChunk,
-        modifyVoxel
+        modifyVoxel,
+        spawnProjectile
     }
 
     public class Packet : IDisposable

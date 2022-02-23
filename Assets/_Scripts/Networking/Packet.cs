@@ -13,7 +13,9 @@ public enum ServerPackets
     spawnPlayer,
     playerPosition,
     playerRotation,
-    chunkData
+    chunkData,
+    modifiedVoxel,
+    spawnProjectile
 }
 
 /// <summary>
@@ -24,7 +26,8 @@ public enum ClientPackets
     welcomeReceived = 1,
     playerMovement,
     requestChunk,
-    modifyVoxel
+    modifyVoxel,
+    spawnProjectile
 }
 
 public class Packet : IDisposable
