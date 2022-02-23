@@ -8,9 +8,9 @@ namespace RimecraftServer
         public static Vector3 GetChunkCoordFromPosition(Vector3 globalPos)
         {
             Vector3 result;
-            result.X = (int)Math.Floor((float)globalPos.X / Constants.CHUNKSIZE);
-            result.Y = (int)Math.Floor((float)globalPos.Y / Constants.CHUNKSIZE);
-            result.Z = (int)Math.Floor((float)globalPos.Z / Constants.CHUNKSIZE);
+            result.X = (int)Math.Floor(globalPos.X / Constants.CHUNKSIZE);
+            result.Y = (int)Math.Floor(globalPos.Y / Constants.CHUNKSIZE);
+            result.Z = (int)Math.Floor(globalPos.Z / Constants.CHUNKSIZE);
 
             return result;
         }

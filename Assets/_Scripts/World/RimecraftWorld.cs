@@ -30,7 +30,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         if (settings == null)
         {
             settings = new Settings();
-            settings.viewDistance = 1;
+            settings.viewDistance = 2;
             settings.mouseSensitivity = 2;
         }
 
@@ -40,7 +40,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         spawnPosition = new Vector3(0, 5, 0);
         player = GameObject.FindGameObjectWithTag("Player").transform;
         player.position = spawnPosition;
-        //CheckLoadDistance();
+        CheckLoadDistance();
         CheckViewDistance();
 
         playerLastChunkCoord = WorldHelper.GetChunkCoordFromPosition(player.position);
@@ -52,7 +52,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
         {
-            //CheckLoadDistance();
+            CheckLoadDistance();
             CheckViewDistance();
         }
 
@@ -176,7 +176,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         {
             for (int i = 0; i < usageCount; i++)
             {
-                WorldData.LoadChunk(positions[i]);
+                ClientSend.RequestChunk((float3)positions[i]);
             }
         }
         positions.Dispose();

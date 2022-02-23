@@ -23,7 +23,9 @@ namespace RimecraftServer
     public enum ClientPackets
     {
         welcomeReceived = 1,
-        playerMovement
+        playerMovement,
+        requestChunk,
+        modifyVoxel
     }
 
     public class Packet : IDisposable

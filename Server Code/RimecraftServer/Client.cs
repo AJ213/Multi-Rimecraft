@@ -48,7 +48,7 @@ namespace RimecraftServer
                 stream.BeginRead(receiveBuffer, 0, dataBufferSize, ReceiveCallback, null);
 
                 ServerSend.Welcome(id, "Welcome to the server!");
-                ServerSend.SendInitialChunks(id, Program.worldData);
+                //ServerSend.SendInitialChunks(id);
             }
 
             public void SendData(Packet packet)

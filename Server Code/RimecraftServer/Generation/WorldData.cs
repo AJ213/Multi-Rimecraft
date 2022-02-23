@@ -38,6 +38,15 @@ namespace RimecraftServer
             }
         }
 
+        public void SetVoxel(Vector3 globalPosition, ushort value)
+        {
+            ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
+
+            Vector3 localPosition = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
+
+            chunk.ModifyVoxel(localPosition, value);
+        }
+
         public void LoadChunk(Vector3 coord)
         {
             if (chunks.ContainsKey(coord))

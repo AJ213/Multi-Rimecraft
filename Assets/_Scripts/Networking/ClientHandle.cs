@@ -17,10 +17,9 @@ public class ClientHandle : MonoBehaviour
         Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
-    public static void InitChunk(Packet packet)
+    public static void SetChunk(Packet packet)
     {
         ChunkData data = packet.ReadChunkData();
-
         WorldData.SetChunk(data);
     }
 
