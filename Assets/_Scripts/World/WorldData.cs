@@ -83,6 +83,20 @@ public class WorldData
         }
     }
 
+    public static void UpdateSorroundingVoxels(int3 globalPosition)
+    {
+        for (int p = 0; p < 6; p++)
+        {
+            int3 currentVoxel = globalPosition + VoxelData.faceChecks[p];
+            int3 coord = WorldHelper.GetChunkCoordFromPosition(currentVoxel);
+
+            if (ChunkMeshManager.Instance.chunkMeshes.ContainsKey(coord))
+            {
+                RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
+            }
+        }
+    }
+
     public void SetVoxel(int3 globalPosition, ushort value)
     {
         ClientSend.ModifyVoxelChunk(globalPosition, value);

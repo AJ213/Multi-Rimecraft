@@ -62,5 +62,16 @@ public class ClientSend : MonoBehaviour
         }
     }
 
+    public static void SpawnProjectile(Vector3 location, Vector3 direction)
+    {
+        using (Packet packet = new Packet((int)ClientPackets.spawnProjectile))
+        {
+            packet.Write(location);
+            packet.Write(direction);
+
+            SendTCPData(packet);
+        }
+    }
+
     #endregion Packets
 }

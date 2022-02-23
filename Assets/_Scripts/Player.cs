@@ -97,8 +97,10 @@ public class Player : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             playerSounds.Play("WeaponUse");
-            GameObject projectile = (GameObject)Instantiate(Resources.Load("Mining Projectile"), Camera.main.transform.position + Camera.main.transform.forward, Quaternion.identity);
-            projectile.GetComponent<Projectile>().Fire(Camera.main.transform.forward, 10, 3);
+            Vector3 position = Camera.main.transform.position + Camera.main.transform.forward;
+            Vector3 direction = Camera.main.transform.forward;
+            Projectile.SpawnProjectile(position, direction, true);
+            ClientSend.SpawnProjectile(position, direction);
         }
 
         if (highlightBlock.gameObject.activeSelf)
