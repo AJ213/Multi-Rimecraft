@@ -26,7 +26,13 @@ namespace RimecraftServer
             Vector3 position = packet.ReadVector3();
             Quaternion rotation = packet.ReadQuaternion();
 
-            Server.clients[fromClient].player.SetInput(position, rotation);
+            if (Server.clients.ContainsKey(fromClient))
+            {
+                if (Server.clients[fromClient].player != null)
+                {
+                    Server.clients[fromClient].player.SetInput(position, rotation);
+                }
+            }
         }
 
         public static void SpawnProjectile(int fromClient, Packet packet)

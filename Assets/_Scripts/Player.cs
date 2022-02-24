@@ -36,7 +36,11 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
-        ClientSend.PlayerMovement();
+        if (Client.Instance.IsConnected)
+        {
+            ClientSend.PlayerMovement();
+        }
+
         if (!IGUIManager.Instance.InUI)
         {
             if (jumpRequest)
@@ -59,6 +63,7 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
+            Client.Instance.DisconnectFromServer();
             sceneChanger.FadeToScene(0);
         }
 

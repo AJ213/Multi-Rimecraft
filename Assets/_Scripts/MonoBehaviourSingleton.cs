@@ -15,6 +15,14 @@ public abstract class MonoBehaviourSingleton<T> : MonoBehaviour
         }
     }
 
+    private void OnDestroy()
+    {
+        if (gameObject.scene.name != "DontDestroyOnLoad")
+        {
+            _singletons.Remove(GetType());
+        }
+    }
+
     private void OnEnable()
     {
         if (_singletons.ContainsKey(GetType()))
@@ -24,7 +32,6 @@ public abstract class MonoBehaviourSingleton<T> : MonoBehaviour
         else
         {
             _singletons.Add(GetType(), this);
-            DontDestroyOnLoad(this);
         }
     }
 }

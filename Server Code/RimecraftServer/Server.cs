@@ -118,9 +118,9 @@ namespace RimecraftServer
                 { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
                 { (int)ClientPackets.requestChunk, ServerHandle.RequestChunk },
                 { (int)ClientPackets.modifyVoxel, ServerHandle.ModifyVoxel },
-                 { (int)ClientPackets.spawnProjectile, ServerHandle.SpawnProjectile },
-                 { (int)ClientPackets.pickupItem, ServerHandle.PickupItem },
-                 { (int)ClientPackets.droppedItem, ServerHandle.DroppedItem },
+                { (int)ClientPackets.spawnProjectile, ServerHandle.SpawnProjectile },
+                { (int)ClientPackets.pickupItem, ServerHandle.PickupItem },
+                { (int)ClientPackets.droppedItem, ServerHandle.DroppedItem },
             };
             Console.WriteLine("Initialized packets.");
         }

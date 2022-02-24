@@ -11,10 +11,10 @@ public class ClientHandle : MonoBehaviour
         int myId = packet.ReadInt();
 
         Debug.Log($"Mesage from server: {msg}");
-        Client.instance.myId = myId;
+        Client.Instance.myId = myId;
         ClientSend.WelcomeReceived();
 
-        Client.instance.udp.Connect(((IPEndPoint)Client.instance.tcp.socket.Client.LocalEndPoint).Port);
+        Client.Instance.udp.Connect(((IPEndPoint)Client.Instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
     public static void SetChunk(Packet packet)
