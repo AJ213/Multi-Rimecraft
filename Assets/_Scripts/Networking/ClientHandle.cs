@@ -37,16 +37,20 @@ public class ClientHandle : MonoBehaviour
     {
         int id = packet.ReadInt();
         Vector3 position = packet.ReadVector3();
-
-        GameManager.players[id].transform.position = position;
+        if (GameManager.players.ContainsKey(id))
+        {
+            GameManager.players[id].transform.position = position;
+        }
     }
 
     public static void PlayerRotation(Packet packet)
     {
         int id = packet.ReadInt();
         Quaternion rotation = packet.ReadQuaternion();
-
-        GameManager.players[id].transform.rotation = rotation;
+        if (GameManager.players.ContainsKey(id))
+        {
+            GameManager.players[id].transform.rotation = rotation;
+        }
     }
 
     public static void ModifiedVoxel(Packet packet)
@@ -77,6 +81,5 @@ public class ClientHandle : MonoBehaviour
     {
         string uuid = packet.ReadString();
         DropItem.DestroyItemWithID(uuid);
-        Debug.Log("destroying item with uuid " + uuid);
     }
 }

@@ -13,8 +13,6 @@ public class TitleMenu : MonoBehaviour
     [SerializeField] private GameObject settingsObject = null;
     [SerializeField] private AudioMixer audioMixer = default;
 
-    [SerializeField] private TextMeshProUGUI seedField = null;
-
     [Header("Settings UI Elements")]
     [SerializeField] private Slider viewDistanceSlider = null;
 
@@ -78,10 +76,6 @@ public class TitleMenu : MonoBehaviour
 
     public void StartGame()
     {
-        int seed = Mathf.Abs(seedField.text.GetHashCode()) / 13333;
-        //string worldName = worldNameField.text;
-        WorldData.seed = seed;
-        //WorldData.worldName = name;
         GetComponent<SceneChanger>().FadeToScene(1);
     }
 

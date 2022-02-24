@@ -27,9 +27,13 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
         {
             _player = Instantiate(playerPrefab, position, rotation);
         }
-
-        _player.GetComponent<PlayerManager>().id = id;
-        _player.GetComponent<PlayerManager>().username = username;
-        players.Add(id, _player.GetComponent<PlayerManager>());
+        PlayerManager manager = _player.GetComponent<PlayerManager>();
+        manager.id = id;
+        manager.username = username;
+        if (players.ContainsKey(id))
+        {
+            players.Remove(id);
+        }
+        players.Add(id, manager);
     }
 }

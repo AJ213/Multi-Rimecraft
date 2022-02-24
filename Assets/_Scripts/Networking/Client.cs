@@ -284,7 +284,9 @@ public class Client : MonoBehaviourSingleton<Client>
             isConnected = false;
             tcp.socket.Close();
             udp.socket.Close();
-            GameManager.players.Remove(myId);
+
+            GameManager.players.Clear();
+
             Debug.Log("Disconnected from server.");
         }
     }
