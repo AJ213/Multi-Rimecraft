@@ -5,9 +5,8 @@ using System.Net;
 using System.Net.Sockets;
 using System;
 
-public class Client : MonoBehaviour
+public class Client : MonoBehaviourSingleton<Client>
 {
-    public static Client instance;
     public static int dataBufferSize = 4096;
 
     public string ip = "127.0.0.1";
@@ -17,36 +16,31 @@ public class Client : MonoBehaviour
     public UDP udp;
 
     private bool isConnected = false;
+    public bool IsConnected => isConnected;
 
     private delegate void PacketHandler(Packet packet);
 
     private static Dictionary<int, PacketHandler> packetHandlers;
 
-    private void Awake()
-    {
-        if (instance == null)
-        {
-            instance = this;
-        }
-        else if (instance != this)
-        {
-            Destroy(this);
-        }
-    }
-
     private void Start()
     {
-        tcp = new TCP();
-        udp = new UDP();
         DontDestroyOnLoad(this.gameObject);
     }
 
     public void ConnectToServer()
     {
+        tcp = new TCP();
+        udp = new UDP();
         InitializeClientData();
 
-        isConnected = true;
         tcp.Connect();
+        isConnected = true;
+        UnityEngine.SceneManagement.SceneManager.LoadScene("InGame");
+    }
+
+    public void DisconnectFromServer()
+    {
+        Disconnect();
     }
 
     public class TCP
@@ -65,7 +59,8 @@ public class Client : MonoBehaviour
             };
 
             receiveBuffer = new byte[dataBufferSize];
-            socket.BeginConnect(instance.ip, instance.port, ConnectCallback, socket);
+            Debug.Log("Connecting to " + Instance.ip + ":" + Instance.port);
+            socket.BeginConnect(Instance.ip, Instance.port, ConnectCallback, socket);
         }
 
         private void ConnectCallback(IAsyncResult result)
@@ -74,6 +69,7 @@ public class Client : MonoBehaviour
 
             if (!socket.Connected)
             {
+                Debug.Log("failed to connect to " + Instance.ip);
                 return;
             }
 
@@ -106,7 +102,7 @@ public class Client : MonoBehaviour
                 int byteLength = stream.EndRead(result);
                 if (byteLength <= 0)
                 {
-                    instance.Disconnect();
+                    Instance.Disconnect();
                     return;
                 }
 
@@ -124,7 +120,7 @@ public class Client : MonoBehaviour
 
         private void Disconnect()
         {
-            instance.Disconnect();
+            Instance.Disconnect();
 
             stream = null;
             receivedData = null;
@@ -184,7 +180,7 @@ public class Client : MonoBehaviour
 
         public UDP()
         {
-            endPoint = new IPEndPoint(IPAddress.Parse(instance.ip), instance.port);
+            endPoint = new IPEndPoint(IPAddress.Parse(Instance.ip), Instance.port);
         }
 
         public void Connect(int localPort)
@@ -204,7 +200,7 @@ public class Client : MonoBehaviour
         {
             try
             {
-                packet.InsertInt(instance.myId);
+                packet.InsertInt(Instance.myId);
                 if (socket != null)
                 {
                     socket.BeginSend(packet.ToArray(), packet.Length(), null, null);
@@ -225,7 +221,7 @@ public class Client : MonoBehaviour
 
                 if (data.Length < 4)
                 {
-                    instance.Disconnect();
+                    Instance.Disconnect();
                     return;
                 }
 
@@ -257,7 +253,7 @@ public class Client : MonoBehaviour
 
         private void Disconnect()
         {
-            instance.Disconnect();
+            Instance.Disconnect();
 
             endPoint = null;
             socket = null;
@@ -288,7 +284,7 @@ public class Client : MonoBehaviour
             isConnected = false;
             tcp.socket.Close();
             udp.socket.Close();
-
+            GameManager.players.Remove(myId);
             Debug.Log("Disconnected from server.");
         }
     }

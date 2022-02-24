@@ -8,7 +8,7 @@ public class ClientSend : MonoBehaviour
     private static void SendTCPData(Packet packet)
     {
         packet.WriteLength();
-        Client.instance.tcp.SendData(packet);
+        Client.Instance.tcp.SendData(packet);
     }
 
     #region Packets
@@ -16,15 +16,15 @@ public class ClientSend : MonoBehaviour
     private static void SendUDPData(Packet packet)
     {
         packet.WriteLength();
-        Client.instance.udp.SendData(packet);
+        Client.Instance.udp.SendData(packet);
     }
 
     public static void WelcomeReceived()
     {
         using (Packet packet = new Packet((int)ClientPackets.welcomeReceived))
         {
-            packet.Write(Client.instance.myId);
-            packet.Write(UIManager.Instance.usernameField.text);
+            packet.Write(Client.Instance.myId);
+            packet.Write("User");
 
             SendTCPData(packet);
         }
@@ -34,8 +34,8 @@ public class ClientSend : MonoBehaviour
     {
         using (Packet packet = new Packet((int)ClientPackets.playerMovement))
         {
-            packet.Write(GameManager.players[Client.instance.myId].transform.position);
-            packet.Write(GameManager.players[Client.instance.myId].transform.rotation);
+            packet.Write(GameManager.players[Client.Instance.myId].transform.position);
+            packet.Write(GameManager.players[Client.Instance.myId].transform.rotation);
 
             SendUDPData(packet);
         }

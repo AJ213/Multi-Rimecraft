@@ -10,10 +10,15 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
     public GameObject world;
     public GameObject playerPrefab;
 
+    private void Awake()
+    {
+        DontDestroyOnLoad(this.gameObject);
+    }
+
     public void SpawnPlayer(int id, string username, Vector3 position, Quaternion rotation)
     {
         GameObject _player;
-        if (id == Client.instance.myId)
+        if (id == Client.Instance.myId)
         {
             _player = Instantiate(localPlayerPrefab, position, rotation);
             Instantiate(world);
