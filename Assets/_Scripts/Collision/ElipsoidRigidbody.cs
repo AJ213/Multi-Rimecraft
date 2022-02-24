@@ -151,9 +151,12 @@ public class ElipsoidRigidbody : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!IGUIManager.Instance.InUI)
+        if (WorldData.GetChunk(this.transform.position.FloorToInt3()) != null)
         {
-            transform.Translate(velocity, Space.World);
+            if (!IGUIManager.Instance.InUI)
+            {
+                transform.Translate(velocity, Space.World);
+            }
         }
     }
 }

@@ -25,8 +25,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 
     private void Start()
     {
-        worldData = new WorldData("null", WorldData.seed);
-        //Debug.Log("Generating new world using seed " + WorldData.seed);
+        worldData = new WorldData();
 
         if (settings == null)
         {
@@ -35,7 +34,6 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
             settings.mouseSensitivity = 2;
         }
 
-        UnityEngine.Random.InitState(WorldData.seed);
         Camera.main.farClipPlane = Mathf.Sqrt(2) * Constants.CHUNKSIZE * 2 * settings.viewDistance;
 
         spawnPosition = new Vector3(0, 5, 0);

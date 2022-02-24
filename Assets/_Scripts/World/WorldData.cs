@@ -5,16 +5,12 @@ using System.Collections.Concurrent;
 [System.Serializable]
 public class WorldData
 {
-    public static string worldName = "Prototype";
-    public static int seed;
-
     [System.NonSerialized]
     public static ConcurrentDictionary<int3, ChunkData> chunks = new ConcurrentDictionary<int3, ChunkData>();
 
-    public WorldData(string name, int theSeed)
+    public WorldData()
     {
-        worldName = name;
-        seed = theSeed;
+        chunks.Clear();
     }
 
     public static ChunkData RequestChunk(int3 coord, bool create)
@@ -27,7 +23,6 @@ public class WorldData
         if (create)
         {
             ClientSend.RequestChunk((float3)coord);
-            Debug.Log("will the chunk arrive in time? is chunk null?" + chunks[coord] == null);
             return chunks[coord];
         }
         else
@@ -66,6 +61,17 @@ public class WorldData
         {
             return chunk.VoxelFromPosition(WorldHelper.GetVoxelLocalPositionInChunk(globalPosition));
         }
+    }
+
+    public static ChunkData GetChunk(int3 globalPosition)
+    {
+        int3 coord = WorldHelper.GetChunkCoordFromPosition(globalPosition);
+        if (!chunks.ContainsKey(coord))
+        {
+            return null;
+        }
+
+        return chunks[WorldHelper.GetChunkCoordFromPosition(globalPosition)];
     }
 
     public static void SetChunk(ChunkData chunk)

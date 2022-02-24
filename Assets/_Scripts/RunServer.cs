@@ -23,7 +23,7 @@ public class RunServer : MonoBehaviour
 
     public static void StartRimecraftServer(string arguments = "")
     {
-        UnityEngine.Debug.Log("running file " + Environment.CurrentDirectory + @"\Build\Server\RimecraftServer.exe" + " args: " + arguments);
-        Process.Start(Environment.CurrentDirectory + @"\Build\Server\RimecraftServer.exe", arguments);
+        UnityEngine.Debug.Log("running file " + Environment.CurrentDirectory + @"\Server\RimecraftServer.exe" + " args: " + arguments);
+        Process.Start(Environment.CurrentDirectory + @"\Server\RimecraftServer.exe", arguments);
     }
 }
