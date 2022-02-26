@@ -119,7 +119,7 @@ public class WorldData
         int3 voxel = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
         try
         {
-            return chunk.map[voxel.x, voxel.y, voxel.z];
+            return chunk[voxel.x, voxel.y, voxel.z];
         }
         catch (System.Exception e)
         {

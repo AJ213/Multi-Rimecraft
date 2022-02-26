@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Numerics;
+using System.Security.Cryptography;
+using System.Text;
 using Noise;
 
 namespace RimecraftServer
@@ -16,9 +18,9 @@ namespace RimecraftServer
 
         public BiomeAttributes[] biomes;
 
-        public WorldData(int seed)
+        public WorldData(string seed)
         {
-            OpenSimplexNoise simplexNoise = new OpenSimplexNoise(seed);
+            OpenSimplexNoise simplexNoise = new OpenSimplexNoise(GetSeed(seed));
             noiseGen = new NoiseGen(simplexNoise);
 
             biomes = new BiomeAttributes[] { new BiomeAttributes() };
@@ -64,6 +66,13 @@ namespace RimecraftServer
             lodes[3].noiseOffset = 1923;
 
             biomes[0].lodes = lodes;
+        }
+
+        private static int GetSeed(string seed)
+        {
+            using var algo = SHA1.Create();
+            var hash = BitConverter.ToInt32(algo.ComputeHash(Encoding.UTF8.GetBytes(seed)));
+            return hash;
         }
 
         public ChunkData RequestChunk(Vector3 coord, bool create)

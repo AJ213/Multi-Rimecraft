@@ -3,6 +3,9 @@ using System.Text;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
+using System.IO;
+using System.IO.Compression;
+using System.Diagnostics;
 
 /// <summary>
 /// Sent from server to client.
@@ -254,16 +257,10 @@ public class Packet : IDisposable
     {
         Write((float3)data.Coord);
 
-        for (int x = 0; x < Constants.CHUNKSIZE; x++)
-        {
-            for (int y = 0; y < Constants.CHUNKSIZE; y++)
-            {
-                for (int z = 0; z < Constants.CHUNKSIZE; z++)
-                {
-                    Write(data.map[x, y, z]);
-                }
-            }
-        }
+        byte[] result = new byte[Constants.CHUNK_VOLUME * sizeof(ushort)];
+        Buffer.BlockCopy(data.blockMap, 0, result, 0, result.Length);
+
+        Write(result);
     }
 
     #endregion Write Data
@@ -497,15 +494,22 @@ public class Packet : IDisposable
         Vector3 coord = ReadVector3(moveReadPos);
 
         ChunkData data = new ChunkData(coord.FloorToInt3());
-        for (int x = 0; x < Constants.CHUNKSIZE; x++)
+        // Read bytes
+        byte[] result = ReadBytes(buffer.Count - readPos);
+
+        // Decompress bytes
+        MemoryStream input = new MemoryStream(result);
+        MemoryStream output = new MemoryStream();
+        using (DeflateStream dstream = new DeflateStream(input, CompressionMode.Decompress))
         {
-            for (int y = 0; y < Constants.CHUNKSIZE; y++)
-            {
-                for (int z = 0; z < Constants.CHUNKSIZE; z++)
-                {
-                    data.map[x, y, z] = ReadUShort(moveReadPos);
-                }
-            }
+            dstream.CopyTo(output);
+        }
+        byte[] decompressedOutput = output.ToArray();
+
+        // Convert bytes to ushort
+        for (int index = 0; index < Constants.CHUNK_VOLUME; index++)
+        {
+            data.blockMap[index] = BitConverter.ToUInt16(decompressedOutput, index * sizeof(ushort));
         }
         return data;
     }

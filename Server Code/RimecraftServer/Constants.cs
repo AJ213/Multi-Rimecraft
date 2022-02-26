@@ -9,9 +9,10 @@ namespace RimecraftServer
         public const int TICKS_PER_SEC = 30;
         public const double MS_PER_TICK = 1000 / (double)TICKS_PER_SEC;
 
-        public const int CHUNKSIZE = 16;
+        public const int CHUNK_SIZE = 16;
+        public const int CHUNK_SURFACE_VOLUME = 256; // CHUNKSIZE^2
+        public const int CHUNK_VOLUME = 4096; // CHUNKSIZE^3
 
-        public const int ChunkVolume = 4096; // CHUNKSIZE^3
-        public const int ChunkSurfaceVolume = 256; // CHUNKSIZE^2
+        public static int COORD_TO_INT(int x, int y, int z) => x + (z << 4) + (y << 8);
     }
 }

@@ -18,7 +18,7 @@ namespace Noise
         {
             posX += offset;
             posY += offset;
-            float chunkScale = Constants.CHUNKSIZE * scale;
+            float chunkScale = Constants.CHUNK_SIZE * scale;
             double simplexNoise = noise.Evaluate(posX / chunkScale, posY / chunkScale);
             return simplexNoise;
         }

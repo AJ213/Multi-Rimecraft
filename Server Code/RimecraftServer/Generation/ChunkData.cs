@@ -7,7 +7,7 @@ namespace RimecraftServer
     public class ChunkData
     {
         private Vector3 coord;
-
+        public readonly ushort[] blockMap = new ushort[Constants.CHUNK_VOLUME];
         public Vector3 Coord
         {
             get { return coord; }
@@ -27,20 +27,17 @@ namespace RimecraftServer
             this.coord = coord;
         }
 
-        public ushort[,,] map = new ushort[Constants.CHUNKSIZE, Constants.CHUNKSIZE, Constants.CHUNKSIZE];
-
         public static void Populate(ChunkData chunk)
         {
-            for (int y = 0; y < Constants.CHUNKSIZE; y++)
+            for (int y = 0; y < Constants.CHUNK_SIZE; y++)
             {
-                for (int x = 0; x < Constants.CHUNKSIZE; x++)
+                for (int x = 0; x < Constants.CHUNK_SIZE; x++)
                 {
-                    for (int z = 0; z < Constants.CHUNKSIZE; z++)
+                    for (int z = 0; z < Constants.CHUNK_SIZE; z++)
                     {
                         Vector3 localPosition = new Vector3(x, y, z);
                         Vector3 globalPosition = WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, chunk.Coord);
-                        chunk.map[x, y, z] = GenerateBlock.SamplePosition(globalPosition, Program.worldData.biomes, Program.worldData.NoiseGeneration);
-                        //chunk.map[x, y, z] = GenerateBlock.GenerateFlatGround(WorldHelper.GetVoxelGlobalPositionFromChunk(new Vector3(x, y, z), chunk.Coord));
+                        chunk[x, y, z] = GenerateBlock.SamplePosition(globalPosition, Program.worldData.biomes, Program.worldData.NoiseGeneration);
                     }
                 }
             }
@@ -58,14 +55,20 @@ namespace RimecraftServer
             ServerSend.SendChunkToAll(this);
         }
 
+        public ushort this[int x, int y, int z]
+        {
+            get => blockMap[Constants.COORD_TO_INT(x, y, z)];
+            set => blockMap[Constants.COORD_TO_INT(x, y, z)] = value;
+        }
+
         public ushort VoxelFromPosition(Vector3 localPosition)
         {
-            return map[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z];
+            return this[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z];
         }
 
         public void SetVoxelFromPosition(Vector3 localPosition, ushort voxel)
         {
-            map[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z] = voxel;
+            this[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z] = voxel;
         }
     }
 }

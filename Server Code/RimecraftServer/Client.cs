@@ -186,7 +186,7 @@ namespace RimecraftServer
 
         public void SendIntoGame(string playerName)
         {
-            player = new Player(id, playerName, new Vector3(0, 0, 0));
+            player = new Player(id, playerName, new Vector3(0, 10, 0));
             foreach (Client client in Server.clients.Values)
             {
                 if (client.player != null)
