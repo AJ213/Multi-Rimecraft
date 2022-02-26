@@ -21,19 +21,19 @@ namespace RimecraftServer
 
             int port = 26950;
             int playerCount = 50;
-            int seed = 0;
+            string seed = "0";
 
             if (args.Length == 3)
             {
                 port = int.Parse(args[0]);
                 playerCount = int.Parse(args[1]);
-                seed = args[2].GetHashCode();
+                seed = args[2];
             }
             else if (args.Length == 0)
             {
                 port = 26950;
                 playerCount = 50;
-                seed = 0;
+                seed = "0";
             }
             else
             {

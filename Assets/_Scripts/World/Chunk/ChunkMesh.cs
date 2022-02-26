@@ -36,7 +36,7 @@ public class ChunkMesh
         meshRenderer.materials = materials;
 
         chunkObject.transform.SetParent(RimecraftWorld.Instance.transform);
-        chunkObject.transform.position = new Vector3(coord.x * Constants.CHUNKSIZE, coord.y * Constants.CHUNKSIZE, coord.z * Constants.CHUNKSIZE);
+        chunkObject.transform.position = new Vector3(coord.x * Constants.CHUNK_SIZE, coord.y * Constants.CHUNK_SIZE, coord.z * Constants.CHUNK_SIZE);
         chunkObject.name = "Chunk " + coord.x + ", " + coord.y + "," + coord.z;
         position = new int3(Mathf.FloorToInt(chunkObject.transform.position.x), Mathf.FloorToInt(chunkObject.transform.position.y), Mathf.FloorToInt(chunkObject.transform.position.z));
     }
@@ -46,15 +46,15 @@ public class ChunkMesh
         if (WorldData.chunks.ContainsKey(coord) && WorldData.chunks[coord] != null)
         {
             ClearMeshData();
-            for (int y = 0; y < Constants.CHUNKSIZE; y++)
+            for (int y = 0; y < Constants.CHUNK_SIZE; y++)
             {
-                for (int x = 0; x < Constants.CHUNKSIZE; x++)
+                for (int x = 0; x < Constants.CHUNK_SIZE; x++)
                 {
-                    for (int z = 0; z < Constants.CHUNKSIZE; z++)
+                    for (int z = 0; z < Constants.CHUNK_SIZE; z++)
                     {
-                        if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord].map[x, y, z]] != null)
+                        if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord][x, y, z]] != null)
                         {
-                            if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord].map[x, y, z]].IsSolid)
+                            if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord][x, y, z]].IsSolid)
                             {
                                 UpdateMeshData(new int3(x, y, z));
                             }
@@ -68,7 +68,7 @@ public class ChunkMesh
 
     private void UpdateMeshData(int3 localPosition)
     {
-        ushort voxel = WorldData.chunks[coord].map[localPosition.x, localPosition.y, localPosition.z];
+        ushort voxel = WorldData.chunks[coord][localPosition.x, localPosition.y, localPosition.z];
 
         for (int p = 0; p < 6; p++)
         {

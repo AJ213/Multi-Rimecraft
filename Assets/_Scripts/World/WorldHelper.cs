@@ -7,24 +7,24 @@ public static class WorldHelper
 {
     public static int3 GetChunkCoordFromPosition(float3 globalPosition)
     {
-        int x = Mathf.FloorToInt(globalPosition.x / Constants.CHUNKSIZE);
-        int y = Mathf.FloorToInt(globalPosition.y / Constants.CHUNKSIZE);
-        int z = Mathf.FloorToInt(globalPosition.z / Constants.CHUNKSIZE);
+        int x = Mathf.FloorToInt(globalPosition.x / Constants.CHUNK_SIZE);
+        int y = Mathf.FloorToInt(globalPosition.y / Constants.CHUNK_SIZE);
+        int z = Mathf.FloorToInt(globalPosition.z / Constants.CHUNK_SIZE);
         return new int3(x, y, z);
     }
 
     public static int3 GetVoxelLocalPositionInChunk(float3 globalPosition)
     {
-        return new int3(Mod(Mathf.FloorToInt(globalPosition.x), Constants.CHUNKSIZE),
-                        Mod(Mathf.FloorToInt(globalPosition.y), Constants.CHUNKSIZE),
-                        Mod(Mathf.FloorToInt(globalPosition.z), Constants.CHUNKSIZE));
+        return new int3(Mod(Mathf.FloorToInt(globalPosition.x), Constants.CHUNK_SIZE),
+                        Mod(Mathf.FloorToInt(globalPosition.y), Constants.CHUNK_SIZE),
+                        Mod(Mathf.FloorToInt(globalPosition.z), Constants.CHUNK_SIZE));
     }
 
     public static int3 GetVoxelGlobalPositionFromChunk(float3 localPosition, int3 coord)
     {
-        return new int3(Mathf.FloorToInt(localPosition.x) + (Constants.CHUNKSIZE * coord.x),
-                        Mathf.FloorToInt(localPosition.y) + (Constants.CHUNKSIZE * coord.y),
-                        Mathf.FloorToInt(localPosition.z) + (Constants.CHUNKSIZE * coord.z));
+        return new int3(Mathf.FloorToInt(localPosition.x) + (Constants.CHUNK_SIZE * coord.x),
+                        Mathf.FloorToInt(localPosition.y) + (Constants.CHUNK_SIZE * coord.y),
+                        Mathf.FloorToInt(localPosition.z) + (Constants.CHUNK_SIZE * coord.z));
     }
 
     public static bool IsVoxelGlobalPositionInChunk(float3 globalPosition, int3 coord)

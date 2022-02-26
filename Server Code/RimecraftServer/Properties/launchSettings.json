@@ -2,7 +2,7 @@
   "profiles": {
     "RimecraftServer": {
       "commandName": "Project",
-      "commandLineArgs": "26950 50 1234"
+      "commandLineArgs": "26950 50 0"
     }
   }
 }

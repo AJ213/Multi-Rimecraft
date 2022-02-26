@@ -34,9 +34,9 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
             settings.mouseSensitivity = 2;
         }
 
-        Camera.main.farClipPlane = Mathf.Sqrt(2) * Constants.CHUNKSIZE * 2 * settings.viewDistance;
+        Camera.main.farClipPlane = Mathf.Sqrt(2) * Constants.CHUNK_SIZE * 2 * settings.viewDistance;
 
-        spawnPosition = new Vector3(0, 5, 0);
+        spawnPosition = new Vector3(0, 10, 0);
         player = GameObject.FindGameObjectWithTag("Player").transform;
         player.position = spawnPosition;
         CheckLoadDistance();

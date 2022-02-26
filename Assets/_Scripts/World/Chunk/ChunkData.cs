@@ -5,10 +5,11 @@ using Unity.Mathematics;
 public class ChunkData
 {
     private int3 coord;
+    public readonly ushort[] blockMap = new ushort[Constants.CHUNK_VOLUME];
 
     public int3 Coord
     {
-        get { return coord; }
+        get => coord;
         set
         {
             coord.x = value.x;
@@ -22,11 +23,14 @@ public class ChunkData
         Coord = pos;
     }
 
-    [HideInInspector]
-    public ushort[,,] map = new ushort[Constants.CHUNKSIZE, Constants.CHUNKSIZE, Constants.CHUNKSIZE];
+    public ushort this[int x, int y, int z]
+    {
+        get => blockMap[Constants.COORD_TO_INT(x, y, z)];
+        set => blockMap[Constants.COORD_TO_INT(x, y, z)] = value;
+    }
 
     public ushort VoxelFromPosition(int3 localPosition)
     {
-        return map[localPosition.x, localPosition.y, localPosition.z];
+        return this[localPosition.x, localPosition.y, localPosition.z];
     }
 }
