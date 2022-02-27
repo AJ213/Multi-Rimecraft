@@ -24,15 +24,15 @@ public class ChunkData
     }
 
     // Returns true if worked
-    public bool ModifyVoxel(int3 localPosition, ushort id)
+    public void ModifyVoxel(int3 localPosition, ushort id)
     {
         if (GetVoxel(localPosition) == id)
         {
-            return false;
+            return;
         }
 
         SetVoxel(localPosition, id);
-        return true;
+        WorldData.UpdateSorroundingVoxels(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, this.coord));
     }
 
     public ushort this[int x, int y, int z]

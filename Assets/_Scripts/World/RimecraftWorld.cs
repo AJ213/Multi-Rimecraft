@@ -4,11 +4,11 @@ using Unity.Mathematics;
 using Unity.Jobs;
 using Unity.Collections;
 using System.Collections.Concurrent;
+using System.Threading;
 
 public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 {
     public static Settings settings;
-    public BiomeAttributes[] biomes;
     public GameObject[] sounds;
 
     public Transform player;
@@ -86,7 +86,9 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 
     private void UpdateChunks()
     {
-        ChunkMeshManager.Instance.chunkMeshes[chunksToUpdate[0]].UpdateChunk();
+        ChunkMesh ourMesh = ChunkMeshManager.Instance.chunkMeshes[chunksToUpdate[0]];
+        ThreadPool.QueueUserWorkItem(ChunkMesh.CreateMeshData, ourMesh.coord);
+
         if (!activeChunks.Contains(chunksToUpdate[0]))
         {
             activeChunks.Add(chunksToUpdate[0]);
@@ -139,43 +141,5 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         {
             ChunkMeshManager.Instance.chunkMeshes[new int3(c.x, c.y, c.z)].IsActive = false;
         }
-    }
-
-    private void CheckLoadDistance()
-    {
-        int3 coord = WorldHelper.GetChunkCoordFromPosition(player.position);
-        playerLastChunkCoord = playerChunkCoord;
-
-        // This is our loadDistance * 2 cubed. Shouldn't ever be bigger than this size for the array
-        int size = 8 * settings.viewDistance * settings.viewDistance * settings.viewDistance;
-        NativeArray<int3> positions = new NativeArray<int3>(size, Allocator.Persistent);
-        int usageCount = 0;
-        bool newChunks = false;
-
-        for (int x = coord.x - settings.viewDistance; x < coord.x + settings.viewDistance; x++)
-        {
-            for (int y = coord.y - settings.viewDistance; y < coord.y + settings.viewDistance; y++)
-            {
-                for (int z = coord.z - settings.viewDistance; z < coord.z + settings.viewDistance; z++)
-                {
-                    int3 location = new int3(x, y, z);
-                    if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(location))
-                    {
-                        positions[usageCount] = location;
-                        newChunks = true;
-                        usageCount++;
-                    }
-                }
-            }
-        }
-
-        if (newChunks)
-        {
-            for (int i = 0; i < usageCount; i++)
-            {
-                //ClientSend.RequestChunk((float3)positions[i]);
-            }
-        }
-        positions.Dispose();
     }
 }
