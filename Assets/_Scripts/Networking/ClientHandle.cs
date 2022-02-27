@@ -67,11 +67,7 @@ public class ClientHandle : MonoBehaviour
 
         int3 localPosition = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
 
-        bool updatedVoxel = data.ModifyVoxel(localPosition, id);
-        if (updatedVoxel)
-        {
-            WorldData.UpdateSorroundingVoxels(globalPosition);
-        }
+        data.ModifyVoxel(localPosition, id);
     }
 
     public static void DroppedItem(Packet packet)
