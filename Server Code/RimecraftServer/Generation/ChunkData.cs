@@ -43,16 +43,16 @@ namespace RimecraftServer
             }
         }
 
-        public void ModifyVoxel(Vector3 localPosition, ushort id)
+        // Returns true if worked
+        public bool ModifyVoxel(Vector3 localPosition, ushort id)
         {
-            if (VoxelFromPosition(localPosition) == id)
+            if (GetVoxel(localPosition) == id)
             {
-                return;
+                return false;
             }
 
-            SetVoxelFromPosition(localPosition, id);
-
-            ServerSend.SendChunkToAll(this);
+            SetVoxel(localPosition, id);
+            return true;
         }
 
         public ushort this[int x, int y, int z]
@@ -61,14 +61,8 @@ namespace RimecraftServer
             set => blockMap[Constants.COORD_TO_INT(x, y, z)] = value;
         }
 
-        public ushort VoxelFromPosition(Vector3 localPosition)
-        {
-            return this[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z];
-        }
+        public ushort GetVoxel(Vector3 localPosition) => this[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z];
 
-        public void SetVoxelFromPosition(Vector3 localPosition, ushort voxel)
-        {
-            this[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z] = voxel;
-        }
+        private ushort SetVoxel(Vector3 localPosition, ushort voxel) => this[(int)localPosition.X, (int)localPosition.Y, (int)localPosition.Z] = voxel;
     }
 }

@@ -23,14 +23,25 @@ public class ChunkData
         Coord = pos;
     }
 
+    // Returns true if worked
+    public bool ModifyVoxel(int3 localPosition, ushort id)
+    {
+        if (GetVoxel(localPosition) == id)
+        {
+            return false;
+        }
+
+        SetVoxel(localPosition, id);
+        return true;
+    }
+
     public ushort this[int x, int y, int z]
     {
         get => blockMap[Constants.COORD_TO_INT(x, y, z)];
         set => blockMap[Constants.COORD_TO_INT(x, y, z)] = value;
     }
 
-    public ushort VoxelFromPosition(int3 localPosition)
-    {
-        return this[localPosition.x, localPosition.y, localPosition.z];
-    }
+    public ushort GetVoxel(int3 localPosition) => this[localPosition.x, localPosition.y, localPosition.z];
+
+    private ushort SetVoxel(int3 localPosition, ushort voxel) => this[localPosition.x, localPosition.y, localPosition.z] = voxel;
 }

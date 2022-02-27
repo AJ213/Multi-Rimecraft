@@ -39,16 +39,6 @@ namespace RimecraftServer
             return GetChunkCoordFromPosition(globalPos).Equals(coord);
         }
 
-        public static bool IsInRange(int value, int length)
-        {
-            return (value >= 0 && value < length);
-        }
-
-        public static bool IsInRange(Vector3 value, int length)
-        {
-            return (IsInRange((int)value.X, length) && IsInRange((int)value.Y, length) && IsInRange((int)value.Z, length));
-        }
-
         public static int Mod(int a, int n)
         {
             return ((a % n) + n) % n;

@@ -136,7 +136,7 @@ namespace RimecraftServer
                 packet.Write(globalPosition);
                 packet.Write(id);
 
-                SendTCPDataToAll(fromClient, packet);
+                SendTCPDataToAll(packet);
             }
         }
 

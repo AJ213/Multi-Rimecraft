@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Net;
+using Unity.Mathematics;
 
 public class ClientHandle : MonoBehaviour
 {
@@ -55,10 +56,22 @@ public class ClientHandle : MonoBehaviour
 
     public static void ModifiedVoxel(Packet packet)
     {
-        Vector3 globalPosition = packet.ReadVector3();
+        int3 globalPosition = packet.ReadVector3().FloorToInt3();
         ushort id = packet.ReadUShort();
 
-        WorldData.UpdateSorroundingVoxels(globalPosition.FloorToInt3());
+        ChunkData data = WorldData.GetChunk(globalPosition);
+        if (data == null)
+        {
+            return;
+        }
+
+        int3 localPosition = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
+
+        bool updatedVoxel = data.ModifyVoxel(localPosition, id);
+        if (updatedVoxel)
+        {
+            WorldData.UpdateSorroundingVoxels(globalPosition);
+        }
     }
 
     public static void DroppedItem(Packet packet)

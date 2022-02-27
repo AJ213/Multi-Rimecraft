@@ -59,7 +59,7 @@ public class WorldData
         }
         else
         {
-            return chunk.VoxelFromPosition(WorldHelper.GetVoxelLocalPositionInChunk(globalPosition));
+            return chunk.GetVoxel(WorldHelper.GetVoxelLocalPositionInChunk(globalPosition));
         }
     }
 
