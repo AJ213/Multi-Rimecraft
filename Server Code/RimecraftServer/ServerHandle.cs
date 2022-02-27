@@ -11,14 +11,16 @@ namespace RimecraftServer
         {
             int clientIdCheck = packet.ReadInt();
             string username = packet.ReadString();
+            int viewDistance = packet.ReadInt();
 
             Console.WriteLine($"{Server.clients[fromClient].tcp.socket.Client.RemoteEndPoint} connected successfully and is now player {fromClient}.");
             if (fromClient != clientIdCheck)
             {
-                Console.WriteLine($"Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
+                Console.WriteLine($"(ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
+                //Console.WriteLine($"Player \"{username}\" (ID: {fromClient}) has assumed the wrong client ID ({clientIdCheck})!");
             }
 
-            Server.clients[fromClient].SendIntoGame(username);
+            Server.clients[fromClient].SendIntoGame(username, viewDistance);
         }
 
         public static void PlayerMovement(int fromClient, Packet packet)
@@ -50,13 +52,6 @@ namespace RimecraftServer
             string uuid = packet.ReadString();
 
             ServerSend.DroppedItem(fromClient, position, id, uuid);
-        }
-
-        public static void RequestChunk(int fromClient, Packet packet)
-        {
-            Vector3 coord = packet.ReadVector3();
-            ChunkData data = Program.worldData.RequestChunk(coord, true);
-            ServerSend.SendChunk(fromClient, data);
         }
 
         public static void ModifyVoxel(int fromClient, Packet packet)

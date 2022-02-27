@@ -75,34 +75,29 @@ namespace RimecraftServer
             return hash;
         }
 
-        public ChunkData RequestChunk(Vector3 coord, bool create)
+        public ChunkData RequestChunk(Vector3 coord)
         {
             if (chunks.ContainsKey(coord))
             {
                 return chunks[coord];
             }
-
-            if (create)
-            {
-                LoadChunk(coord);
-                return chunks[coord];
-            }
             else
             {
+                Console.WriteLine("Request a chunk that doesn't exist");
                 return null;
             }
         }
 
         public void SetVoxel(int fromClient, Vector3 globalPosition, ushort value)
         {
-            ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
+            ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition));
             Vector3 localPosition = WorldHelper.GetVoxelLocalPositionInChunk(globalPosition);
 
             ServerSend.ModifiedVoxel(fromClient, globalPosition, value);
             chunk.ModifyVoxel(localPosition, value);
         }
 
-        public void LoadChunk(Vector3 coord)
+        public void LoadChunk(Vector3 coord, int sendTarget)
         {
             if (chunks.ContainsKey(coord))
             {
@@ -112,6 +107,7 @@ namespace RimecraftServer
             chunks.TryAdd(coord, new ChunkData(coord));
 
             ChunkData.Populate(chunks[coord]);
+            ServerSend.SendChunk(sendTarget, chunks[coord]);
         }
     }
 }

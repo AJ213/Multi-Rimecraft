@@ -30,7 +30,6 @@ public enum ClientPackets
 {
     welcomeReceived = 1,
     playerMovement,
-    requestChunk,
     modifyVoxel,
     spawnProjectile,
     pickupItem,

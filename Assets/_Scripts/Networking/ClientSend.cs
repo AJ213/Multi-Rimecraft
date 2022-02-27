@@ -24,7 +24,8 @@ public class ClientSend : MonoBehaviour
         using (Packet packet = new Packet((int)ClientPackets.welcomeReceived))
         {
             packet.Write(Client.Instance.myId);
-            packet.Write("User");
+            packet.Write("null");
+            packet.Write(RimecraftWorld.settings.viewDistance + 2); // our load distance is viewDistance + 2
 
             SendTCPData(packet);
         }
@@ -38,16 +39,6 @@ public class ClientSend : MonoBehaviour
             packet.Write(GameManager.players[Client.Instance.myId].transform.rotation);
 
             SendUDPData(packet);
-        }
-    }
-
-    public static void RequestChunk(Vector3 coord)
-    {
-        using (Packet packet = new Packet((int)ClientPackets.requestChunk))
-        {
-            packet.Write(coord);
-
-            SendTCPData(packet);
         }
     }
 

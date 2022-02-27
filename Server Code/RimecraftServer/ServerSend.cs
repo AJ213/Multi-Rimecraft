@@ -114,7 +114,6 @@ namespace RimecraftServer
             using (Packet packet = new Packet((int)ServerPackets.chunkData))
             {
                 packet.Write(chunk);
-
                 SendTCPData(toClient, packet);
             }
         }
@@ -136,7 +135,7 @@ namespace RimecraftServer
                 packet.Write(globalPosition);
                 packet.Write(id);
 
-                SendTCPDataToAll(packet);
+                SendTCPDataToAll(fromClient, packet);
             }
         }
 

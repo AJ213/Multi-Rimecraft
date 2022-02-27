@@ -18,10 +18,10 @@ public class ClientHandle : MonoBehaviour
         Client.Instance.udp.Connect(((IPEndPoint)Client.Instance.tcp.socket.Client.LocalEndPoint).Port);
     }
 
-    public static void SetChunk(Packet packet)
+    public static void SetAddChunk(Packet packet)
     {
         ChunkData data = packet.ReadChunkData();
-        WorldData.SetChunk(data);
+        RimecraftWorld.worldData.SetChunk(data);
     }
 
     public static void SpawnPlayer(Packet packet)
@@ -59,7 +59,7 @@ public class ClientHandle : MonoBehaviour
         int3 globalPosition = packet.ReadVector3().FloorToInt3();
         ushort id = packet.ReadUShort();
 
-        ChunkData data = WorldData.GetChunk(globalPosition);
+        ChunkData data = RimecraftWorld.worldData.GetChunk(globalPosition);
         if (data == null)
         {
             return;

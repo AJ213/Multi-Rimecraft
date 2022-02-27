@@ -143,7 +143,7 @@ public class Player : MonoBehaviour
             float3 position = cam.position + (cam.forward * step);
             int3 roundedPosition = new int3(Mathf.FloorToInt(position.x), Mathf.FloorToInt(position.y), Mathf.FloorToInt(position.z));
 
-            if (WorldData.CheckForVoxel(roundedPosition) != 0)
+            if (RimecraftWorld.worldData.CheckForVoxel(roundedPosition) != 0)
             {
                 highlightBlock.position = new float3(roundedPosition);
                 placeBlockPosition = lastPos;

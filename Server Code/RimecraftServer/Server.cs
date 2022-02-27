@@ -116,7 +116,6 @@ namespace RimecraftServer
             {
                 { (int)ClientPackets.welcomeReceived, ServerHandle.WelcomeReceived },
                 { (int)ClientPackets.playerMovement, ServerHandle.PlayerMovement },
-                { (int)ClientPackets.requestChunk, ServerHandle.RequestChunk },
                 { (int)ClientPackets.modifyVoxel, ServerHandle.ModifyVoxel },
                 { (int)ClientPackets.spawnProjectile, ServerHandle.SpawnProjectile },
                 { (int)ClientPackets.pickupItem, ServerHandle.PickupItem },

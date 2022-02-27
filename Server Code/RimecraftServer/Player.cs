@@ -9,23 +9,36 @@ namespace RimecraftServer
     {
         public int id;
         public string username;
+        public int loadDistance;
+        public Vector3 coord;
+        public Vector3 lastCoord = new Vector3(-1, -1, -1);
+        public HashSet<Vector3> loadedChunks = new HashSet<Vector3>();
 
         public Vector3 position;
         public Quaternion rotation;
 
-        public Player(int id, string username, Vector3 spawnPosition)
+        public Player(int id, string username, int viewDistance, Vector3 spawnPosition)
         {
             this.id = id;
             this.username = username;
+            this.loadDistance = viewDistance;
             this.position = spawnPosition;
             this.rotation = Quaternion.Identity;
         }
 
+        public void UpdateLastCoord()
+        {
+            lastCoord = coord;
+        }
+
         public void Update()
         {
+            coord = WorldHelper.GetChunkCoordFromPosition(position);
+            ChunkLoader.CheckLoadDistance(this);
             ServerSend.PlayerPosition(this);
             ServerSend.PlayerRotation(this);
         }
+
         public void SetInput(Vector3 position, Quaternion rotation)
         {
             this.position = position;
