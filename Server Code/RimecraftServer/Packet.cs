@@ -31,7 +31,6 @@ namespace RimecraftServer
     {
         welcomeReceived = 1,
         playerMovement,
-        requestChunk,
         modifyVoxel,
         spawnProjectile,
         pickupItem,

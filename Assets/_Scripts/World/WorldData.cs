@@ -6,14 +6,14 @@ using System.Collections.Concurrent;
 public class WorldData
 {
     [System.NonSerialized]
-    public static ConcurrentDictionary<int3, ChunkData> chunks = new ConcurrentDictionary<int3, ChunkData>();
+    public ConcurrentDictionary<int3, ChunkData> chunks = new ConcurrentDictionary<int3, ChunkData>();
 
     public WorldData()
     {
         chunks.Clear();
     }
 
-    public static ChunkData RequestChunk(int3 coord, bool create)
+    public ChunkData RequestChunk(int3 coord, bool create)
     {
         if (chunks.ContainsKey(coord))
         {
@@ -22,7 +22,7 @@ public class WorldData
 
         if (create)
         {
-            ClientSend.RequestChunk((float3)coord);
+            //ClientSend.RequestChunk((float3)coord);
             return chunks[coord];
         }
         else
@@ -31,12 +31,12 @@ public class WorldData
         }
     }
 
-    public static ChunkData RequestChunkViaGlobalPosition(int3 globalPosition, bool create)
+    public ChunkData RequestChunkViaGlobalPosition(int3 globalPosition, bool create)
     {
         return RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), create);
     }
 
-    public static ushort CheckForVoxel(int3 globalPosition)
+    public ushort CheckForVoxel(int3 globalPosition)
     {
         ushort voxel = GetVoxel(globalPosition);
 
@@ -50,7 +50,7 @@ public class WorldData
         }
     }
 
-    public static ushort GetVoxelFromPosition(float3 globalPosition)
+    public ushort GetVoxelFromPosition(float3 globalPosition)
     {
         ChunkData chunk = RequestChunkViaGlobalPosition((int3)globalPosition, false);
         if (chunk == null)
@@ -63,7 +63,7 @@ public class WorldData
         }
     }
 
-    public static ChunkData GetChunk(int3 globalPosition)
+    public ChunkData GetChunk(int3 globalPosition)
     {
         int3 coord = WorldHelper.GetChunkCoordFromPosition(globalPosition);
         if (!chunks.ContainsKey(coord))
@@ -74,7 +74,7 @@ public class WorldData
         return chunks[WorldHelper.GetChunkCoordFromPosition(globalPosition)];
     }
 
-    public static void SetChunk(ChunkData chunk)
+    public void SetChunk(ChunkData chunk)
     {
         if (chunks.ContainsKey(chunk.Coord))
         {
@@ -106,9 +106,10 @@ public class WorldData
     public void SetVoxel(int3 globalPosition, ushort value)
     {
         ClientSend.ModifyVoxelChunk(globalPosition, value);
+        RimecraftWorld.worldData.GetChunk(globalPosition).ModifyVoxel(WorldHelper.GetVoxelLocalPositionInChunk(globalPosition), value);
     }
 
-    public static ushort GetVoxel(int3 globalPosition)
+    public ushort GetVoxel(int3 globalPosition)
     {
         ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
         if (chunk == null)

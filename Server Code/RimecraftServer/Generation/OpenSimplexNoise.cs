@@ -46,22 +46,6 @@ namespace Noise
 
         private static Contribution2[] lookup2D;
         private static Contribution3[] lookup3D;
-        private static Contribution4[] lookup4D;
-        /*
-        public static double OctavePerlin(double x, double y, double z, int octaves, double persistence) {
-		    double total = 0;
-		    double frequency = 1;
-		    double amplitude = 1;
-		    for(int i=0;i<octaves;i++) {
-			    total += perlin(x * frequency, y * frequency, z * frequency) * amplitude;
-
-			    amplitude *= persistence;
-			    frequency *= 2;
-		    }
-
-		    return total;
-	    }
-        */
 
         static OpenSimplexNoise()
         {
@@ -315,25 +299,6 @@ namespace Noise
                 this.xsb = xsb;
                 this.ysb = ysb;
                 this.zsb = zsb;
-            }
-        }
-
-        private class Contribution4
-        {
-            public double dx, dy, dz, dw;
-            public int xsb, ysb, zsb, wsb;
-            public Contribution4 Next;
-
-            public Contribution4(double multiplier, int xsb, int ysb, int zsb, int wsb)
-            {
-                dx = -xsb - multiplier * SQUISH_4D;
-                dy = -ysb - multiplier * SQUISH_4D;
-                dz = -zsb - multiplier * SQUISH_4D;
-                dw = -wsb - multiplier * SQUISH_4D;
-                this.xsb = xsb;
-                this.ysb = ysb;
-                this.zsb = zsb;
-                this.wsb = wsb;
             }
         }
     }

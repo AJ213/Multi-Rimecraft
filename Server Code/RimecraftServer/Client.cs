@@ -184,9 +184,9 @@ namespace RimecraftServer
             }
         }
 
-        public void SendIntoGame(string playerName)
+        public void SendIntoGame(string playerName, int viewDistance)
         {
-            player = new Player(id, playerName, new Vector3(0, 10, 0));
+            player = new Player(id, playerName, viewDistance, new Vector3(0, 10, 0));
             foreach (Client client in Server.clients.Values)
             {
                 if (client.player != null)

@@ -63,7 +63,7 @@ public class PlayAudioAtArea : MonoBehaviour
         int numAlive = snow.GetParticles(particles);
         for (int i = 0; i < particles.Length; i++)
         {
-            ushort voxel = WorldData.GetVoxelFromPosition(particles[i].position);
+            ushort voxel = RimecraftWorld.worldData.GetVoxelFromPosition(particles[i].position);
             if (voxel != 0)
             {
                 particles[i].remainingLifetime = 0;
@@ -85,7 +85,7 @@ public class PlayAudioAtArea : MonoBehaviour
     {
         for (int i = 1; i <= height; i++)
         {
-            if (WorldData.CheckForVoxel((player.position + (Vector3.up * i)).FloorToInt3()) != 0)
+            if (RimecraftWorld.worldData.CheckForVoxel((player.position + (Vector3.up * i)).FloorToInt3()) != 0)
             {
                 return false;
             }

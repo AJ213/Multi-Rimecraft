@@ -268,7 +268,7 @@ public class Client : MonoBehaviourSingleton<Client>
             {(int)ServerPackets.spawnPlayer, ClientHandle.SpawnPlayer },
             {(int)ServerPackets.playerPosition, ClientHandle.PlayerPosition },
             {(int)ServerPackets.playerRotation, ClientHandle.PlayerRotation },
-            {(int)ServerPackets.chunkData, ClientHandle.SetChunk },
+            {(int)ServerPackets.chunkData, ClientHandle.SetAddChunk },
             {(int)ServerPackets.modifiedVoxel, ClientHandle.ModifiedVoxel },
             {(int)ServerPackets.spawnProjectile, ClientHandle.SpawnProjectile },
             {(int)ServerPackets.pickupItem, ClientHandle.PickupItem },

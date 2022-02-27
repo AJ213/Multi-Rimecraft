@@ -43,7 +43,7 @@ public class ChunkMesh
 
     public void UpdateChunk()
     {
-        if (WorldData.chunks.ContainsKey(coord) && WorldData.chunks[coord] != null)
+        if (RimecraftWorld.worldData.chunks.ContainsKey(coord) && RimecraftWorld.worldData.chunks[coord] != null)
         {
             ClearMeshData();
             for (int y = 0; y < Constants.CHUNK_SIZE; y++)
@@ -52,9 +52,9 @@ public class ChunkMesh
                 {
                     for (int z = 0; z < Constants.CHUNK_SIZE; z++)
                     {
-                        if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord][x, y, z]] != null)
+                        if (ChunkMeshManager.Instance.blockTypes[RimecraftWorld.worldData.chunks[coord][x, y, z]] != null)
                         {
-                            if (ChunkMeshManager.Instance.blockTypes[WorldData.chunks[coord][x, y, z]].IsSolid)
+                            if (ChunkMeshManager.Instance.blockTypes[RimecraftWorld.worldData.chunks[coord][x, y, z]].IsSolid)
                             {
                                 UpdateMeshData(new int3(x, y, z));
                             }
@@ -68,11 +68,11 @@ public class ChunkMesh
 
     private void UpdateMeshData(int3 localPosition)
     {
-        ushort voxel = WorldData.chunks[coord][localPosition.x, localPosition.y, localPosition.z];
+        ushort voxel = RimecraftWorld.worldData.chunks[coord][localPosition.x, localPosition.y, localPosition.z];
 
         for (int p = 0; p < 6; p++)
         {
-            ushort neighbor = WorldData.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
+            ushort neighbor = RimecraftWorld.worldData.GetVoxelFromPosition(WorldHelper.GetVoxelGlobalPositionFromChunk(localPosition, coord) + VoxelData.faceChecks[p]);
             if (ChunkMeshManager.Instance.blockTypes[neighbor].RenderNeighborFaces)
             {
                 int faceVertCount = 0;

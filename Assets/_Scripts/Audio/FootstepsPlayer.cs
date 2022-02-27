@@ -25,7 +25,7 @@ public class FootstepsPlayer : MonoBehaviour
     {
         if (!waitingForFootstep)
         {
-            ushort groundBlockID = WorldData.CheckForVoxel((new Vector3(this.transform.position.x, this.transform.position.y - 0.1f, this.transform.position.z)).FloorToInt3());
+            ushort groundBlockID = RimecraftWorld.worldData.CheckForVoxel((new Vector3(this.transform.position.x, this.transform.position.y - 0.1f, this.transform.position.z)).FloorToInt3());
             if (snowBlocks.Contains(groundBlockID))
             {
                 StartCoroutine(PlayRandomFootstep(new Vector2Int(0, 3), speed));

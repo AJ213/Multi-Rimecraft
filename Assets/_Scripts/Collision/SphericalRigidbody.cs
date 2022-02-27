@@ -15,7 +15,7 @@ public class SphericalRigidbody : MonoBehaviour
 
     private bool Colliding(int3 position)
     {
-        ushort voxel = WorldData.CheckForVoxel(position);
+        ushort voxel = RimecraftWorld.worldData.CheckForVoxel(position);
         bool result = voxel == 0;
         if (!result)
         {

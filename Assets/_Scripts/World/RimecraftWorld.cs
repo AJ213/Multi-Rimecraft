@@ -39,7 +39,6 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         spawnPosition = new Vector3(0, 10, 0);
         player = GameObject.FindGameObjectWithTag("Player").transform;
         player.position = spawnPosition;
-        CheckLoadDistance();
         CheckViewDistance();
 
         playerLastChunkCoord = WorldHelper.GetChunkCoordFromPosition(player.position);
@@ -51,7 +50,6 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 
         if (!playerChunkCoord.Equals(playerLastChunkCoord))
         {
-            CheckLoadDistance();
             CheckViewDistance();
         }
 
@@ -117,7 +115,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
                     if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(newCoord))
                     {
                         ChunkMeshManager.Instance.chunkMeshes[newCoord] = new ChunkMesh(newCoord);
-                        WorldData.RequestChunk(newCoord, false);
+                        RimecraftWorld.worldData.RequestChunk(newCoord, false);
                         AddChunkToUpdate(newCoord);
                     }
 
@@ -175,7 +173,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         {
             for (int i = 0; i < usageCount; i++)
             {
-                ClientSend.RequestChunk((float3)positions[i]);
+                //ClientSend.RequestChunk((float3)positions[i]);
             }
         }
         positions.Dispose();
