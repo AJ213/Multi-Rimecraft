@@ -34,13 +34,22 @@ public class ServerList : MonoBehaviour
 
     public void CreateAndAddItem()
     {
-        ServerListObject item = CreateItem();
         string ipVal = ipField.text;
-        if (ipVal.Length < 2)
+        if (ipVal.Length < 1)
         {
             ipVal = "127.0.0.1";
         }
         int port = int.Parse(portField.text);
+
+        for (int i = 0; i < listItem.Count; i++)
+        {
+            if (listItem[i].IP == ipVal && listItem[i].Port == port)
+            {
+                return;
+            }
+        }
+
+        ServerListObject item = CreateItem();
         item.SetValues(ipVal, port, this);
 
         int id = listItem.Count;
@@ -49,7 +58,6 @@ public class ServerList : MonoBehaviour
         string keyPort = id.ToString() + "ListPort";
         PlayerPrefs.SetInt(keyPort, item.Port);
         PlayerPrefs.Save();
-        Debug.Log("saved and added");
     }
 
     private void AddItem(ServerListObject item)
@@ -60,14 +68,31 @@ public class ServerList : MonoBehaviour
 
     public void RemoveItem(ServerListObject item)
     {
+        for (int i = listItem.IndexOf(item); i < listItem.Count - 1; i++)
+        {
+            SwapNext(item);
+        }
         int id = listItem.Count;
         string keyIP = id.ToString() + "ListIP";
         PlayerPrefs.DeleteKey(keyIP);
         string keyPort = id.ToString() + "ListPort";
         PlayerPrefs.DeleteKey(keyPort);
-
+        PlayerPrefs.Save();
         listItem.Remove(item);
         Destroy(item.gameObject);
+    }
+
+    private void SwapNext(ServerListObject item)
+    {
+        int id = listItem.IndexOf(item) + 1;
+        ServerListObject nextObj = listItem[id];
+        string keyIP = id.ToString() + "ListIP";
+        string keyPort = id.ToString() + "ListPort";
+
+        PlayerPrefs.SetString(keyIP, nextObj.IP);
+        PlayerPrefs.SetInt(keyPort, nextObj.Port);
+        listItem[id - 1] = nextObj;
+        listItem[id] = item;
     }
 
     public void UpdateAll()

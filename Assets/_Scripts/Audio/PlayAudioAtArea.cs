@@ -54,16 +54,42 @@ public class PlayAudioAtArea : MonoBehaviour
     }
 
     private ParticleSystem.Particle[] particles;
+    private Dictionary<int3, ushort> knownPositions = new Dictionary<int3, ushort>();
+    private int deltaCounter = 0;
+    public int maxValue = 30;
 
-    private void LateUpdate()
+    private void FixedUpdate()
     {
+        deltaCounter++;
+        if (deltaCounter < maxValue)
+        {
+            return;
+        }
+        deltaCounter = 0;
         if (particles == null || particles.Length < snow.main.maxParticles)
             particles = new ParticleSystem.Particle[snow.main.maxParticles];
 
         int numAlive = snow.GetParticles(particles);
+        knownPositions.Clear();
         for (int i = 0; i < particles.Length; i++)
         {
-            ushort voxel = RimecraftWorld.worldData.GetVoxelFromPosition(particles[i].position);
+            int3 pos = particles[i].position.FloorToInt3();
+            ushort voxel;
+            if (knownPositions.ContainsKey(pos))
+            {
+                voxel = knownPositions[pos];
+            }
+            else
+            {
+                ChunkData chunk = RimecraftWorld.worldData.GetChunk(particles[i].position.FloorToInt3());
+                if (chunk == null)
+                {
+                    break;
+                }
+                voxel = chunk.GetVoxel(WorldHelper.GetVoxelLocalPositionInChunk(pos));
+                knownPositions[pos] = voxel;
+            }
+
             if (voxel != 0)
             {
                 particles[i].remainingLifetime = 0;

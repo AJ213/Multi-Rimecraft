@@ -87,24 +87,27 @@ namespace RimecraftServer
             }
         }
 
-        public static void DroppedItem(int fromClient, Vector3 position, ushort id, string uuid)
+        public static void DroppedItem(int fromClient, Vector3 position, ushort id, int stackSize, string uuid)
         {
             using (Packet packet = new Packet((int)ServerPackets.droppedItem))
             {
                 packet.Write(position);
                 packet.Write(id);
+                packet.Write(stackSize);
                 packet.Write(uuid);
 
                 SendTCPDataToAll(fromClient, packet);
             }
         }
 
-        public static void SpawnProjectile(int fromClient, Vector3 position, Vector3 direction)
+        public static void SpawnProjectile(int fromClient, Vector3 position, Vector3 direction, float speed, int bounceCount)
         {
             using (Packet packet = new Packet((int)ServerPackets.spawnProjectile))
             {
                 packet.Write(position);
                 packet.Write(direction);
+                packet.Write(speed);
+                packet.Write(bounceCount);
                 SendTCPDataToAll(fromClient, packet);
             }
         }
@@ -139,7 +142,7 @@ namespace RimecraftServer
             }
         }
 
-        public static void SendChunkToAll(ChunkData chunk)
+        /*public static void SendChunkToAll(ChunkData chunk)
         {
             using (Packet packet = new Packet((int)ServerPackets.chunkData))
             {
@@ -147,7 +150,7 @@ namespace RimecraftServer
 
                 SendTCPDataToAll(packet);
             }
-        }
+        }*/
 
         public static void PlayerPosition(Player player)
         {

@@ -23,6 +23,15 @@ public class ChunkData
         Coord = pos;
     }
 
+    public ChunkData(int3 pos, ChunkData copy)
+    {
+        Coord = pos;
+        for (int i = 0; i < Constants.CHUNK_VOLUME; i++)
+        {
+            blockMap[i] = copy.blockMap[i];
+        }
+    }
+
     // Returns true if worked
     public void ModifyVoxel(int3 localPosition, ushort id)
     {

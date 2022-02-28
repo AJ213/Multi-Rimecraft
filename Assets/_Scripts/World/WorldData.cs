@@ -13,27 +13,18 @@ public class WorldData
         chunks.Clear();
     }
 
-    public ChunkData RequestChunk(int3 coord, bool create)
+    public ChunkData RequestChunk(int3 coord)
     {
         if (chunks.ContainsKey(coord))
         {
             return chunks[coord];
         }
-
-        if (create)
-        {
-            //ClientSend.RequestChunk((float3)coord);
-            return chunks[coord];
-        }
-        else
-        {
-            return null;
-        }
+        return null;
     }
 
-    public ChunkData RequestChunkViaGlobalPosition(int3 globalPosition, bool create)
+    public ChunkData RequestChunkViaGlobalPosition(int3 globalPosition)
     {
-        return RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), create);
+        return RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition));
     }
 
     public ushort CheckForVoxel(int3 globalPosition)
@@ -52,7 +43,7 @@ public class WorldData
 
     public ushort GetVoxelFromPosition(float3 globalPosition)
     {
-        ChunkData chunk = RequestChunkViaGlobalPosition((int3)globalPosition, false);
+        ChunkData chunk = RequestChunkViaGlobalPosition((int3)globalPosition);
         if (chunk == null)
         {
             return 0;
@@ -111,7 +102,7 @@ public class WorldData
 
     public ushort GetVoxel(int3 globalPosition)
     {
-        ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition), false);
+        ChunkData chunk = RequestChunk(WorldHelper.GetChunkCoordFromPosition(globalPosition));
         if (chunk == null)
         {
             return 0;

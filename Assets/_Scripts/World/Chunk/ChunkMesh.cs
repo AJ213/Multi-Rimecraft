@@ -45,17 +45,19 @@ public class ChunkMesh
         {
             ClearMeshData();
             int vertexIndex = 0;
+            ChunkData chunk = new ChunkData(coord, RimecraftWorld.worldData.chunks[coord]);
+
             for (int y = 0; y < Constants.CHUNK_SIZE; y++)
             {
                 for (int x = 0; x < Constants.CHUNK_SIZE; x++)
                 {
                     for (int z = 0; z < Constants.CHUNK_SIZE; z++)
                     {
-                        if (ChunkMeshManager.Instance.blockTypes[RimecraftWorld.worldData.chunks[coord][x, y, z]] != null)
+                        if (ChunkMeshManager.Instance.blockTypes[chunk[x, y, z]] != null)
                         {
-                            if (ChunkMeshManager.Instance.blockTypes[RimecraftWorld.worldData.chunks[coord][x, y, z]].IsSolid)
+                            if (ChunkMeshManager.Instance.blockTypes[chunk[x, y, z]].IsSolid)
                             {
-                                UpdateMeshData(new int3(x, y, z), ref vertexIndex);
+                                UpdateMeshData(new int3(x, y, z), ref vertexIndex, chunk);
                             }
                         }
                     }
@@ -73,9 +75,9 @@ public class ChunkMesh
         chunkMesh.UpdateChunk();
     }
 
-    private void UpdateMeshData(int3 localPosition, ref int vertexIndex)
+    private void UpdateMeshData(int3 localPosition, ref int vertexIndex, ChunkData chunk)
     {
-        ushort voxel = RimecraftWorld.worldData.chunks[coord][localPosition.x, localPosition.y, localPosition.z];
+        ushort voxel = chunk[localPosition.x, localPosition.y, localPosition.z];
 
         for (int p = 0; p < 6; p++)
         {

@@ -21,6 +21,7 @@ public class ClientHandle : MonoBehaviour
     public static void SetAddChunk(Packet packet)
     {
         ChunkData data = packet.ReadChunkData();
+        while (RimecraftWorld.worldData == null) ;
         RimecraftWorld.worldData.SetChunk(data);
     }
 
@@ -83,7 +84,9 @@ public class ClientHandle : MonoBehaviour
     {
         Vector3 position = packet.ReadVector3();
         Vector3 direction = packet.ReadVector3();
-        Projectile.SpawnProjectile(position, direction, false);
+        float speed = packet.ReadFloat();
+        int bounceCount = packet.ReadInt();
+        Projectile.SpawnProjectile(position, direction, speed, bounceCount, false);
     }
 
     public static void PickupItem(Packet packet)

@@ -149,7 +149,14 @@ public class Client : MonoBehaviourSingleton<Client>
                     using (Packet packet = new Packet(packetBytes))
                     {
                         int packetId = packet.ReadInt();
-                        packetHandlers[packetId](packet);
+                        if (!packetHandlers.ContainsKey(packetId))
+                        {
+                            Debug.Log("packet does not contain key " + packetId);
+                        }
+                        else
+                        {
+                            packetHandlers[packetId](packet);
+                        }
                     }
                 });
 

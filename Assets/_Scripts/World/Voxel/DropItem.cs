@@ -56,19 +56,19 @@ public class DropItem : MonoBehaviour
 
         if (id != 0)
         {
-            SpawnDropItem(id, position, uuid);
+            SpawnDropItem(id, position, 1, uuid);
         }
     }
 
-    public static void SpawnDropItem(ushort id, Vector3 position, string uuid = "")
+    public static void SpawnDropItem(ushort id, Vector3 position, int stackSize = 1, string uuid = "")
     {
         GameObject droppedBlock = (GameObject)Instantiate(Resources.Load("DroppedItem"), position, Quaternion.identity);
         DropItem dropItem = droppedBlock.GetComponent<DropItem>();
-        dropItem.SetItemStack(id, 1);
+        dropItem.SetItemStack(id, stackSize);
         if (uuid.Equals(""))
         {
             uuid = Guid.NewGuid().ToString();
-            ClientSend.DroppedItem(position, id, uuid);
+            ClientSend.DroppedItem(position, id, stackSize, uuid);
         }
 
         dropItem.SetID(uuid);

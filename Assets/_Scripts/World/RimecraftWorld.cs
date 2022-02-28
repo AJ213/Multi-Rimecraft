@@ -117,7 +117,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
                     if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(newCoord))
                     {
                         ChunkMeshManager.Instance.chunkMeshes[newCoord] = new ChunkMesh(newCoord);
-                        RimecraftWorld.worldData.RequestChunk(newCoord, false);
+                        RimecraftWorld.worldData.RequestChunk(newCoord);
                         AddChunkToUpdate(newCoord);
                     }
 
