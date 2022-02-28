@@ -12,6 +12,12 @@ public class DragAndDropHandler : MonoBehaviour
     private PointerEventData pointerEventData;
     [SerializeField] private EventSystem eventSystem = null;
 
+    public void DropCursorItemSlot()
+    {
+        DropItem.SpawnDropItem(cursorItemSlot.stack.id, RimecraftWorld.Instance.player.transform.position + RimecraftWorld.Instance.player.transform.forward * 2 + Vector3.up, cursorItemSlot.stack.amount);
+        cursorItemSlot.EmptySlot();
+    }
+
     private void Start()
     {
         cursorItemSlot = new ItemSlot(cursorSlot);
@@ -21,7 +27,19 @@ public class DragAndDropHandler : MonoBehaviour
     {
         if (!IGUIManager.Instance.InUI)
         {
+            if (cursorItemSlot.stack != null && cursorItemSlot.stack.amount > 0)
+            {
+                DropCursorItemSlot();
+            }
             return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            if (cursorItemSlot.stack != null && cursorItemSlot.stack.amount > 0)
+            {
+                DropCursorItemSlot();
+            }
         }
 
         cursorSlot.transform.position = Input.mousePosition;

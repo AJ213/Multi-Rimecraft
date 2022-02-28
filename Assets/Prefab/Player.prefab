@@ -177,7 +177,7 @@ Light:
   m_Shape: 0
   m_Color: {r: 0.5707547, g: 0.8984228, b: 1, a: 1}
   m_Intensity: 1
-  m_Range: 10
+  m_Range: 12.5
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
@@ -750,6 +750,7 @@ MonoBehaviour:
   minValue: 0.1
   volumeChangeSpeed: 0.3
   yValue: -10
+  maxValue: 30
 --- !u!1 &2272527906226187088
 GameObject:
   m_ObjectHideFlags: 0
@@ -12814,6 +12815,7 @@ MonoBehaviour:
   reach: 8
   highlightBlock: {fileID: 3831767583821731838}
   placeBlockPosition: {x: 0, y: 0, z: 0}
+  toolLight: {fileID: 3831767583448379206}
   footstepInterval: 0.4
   footstepIntervalSprinting: 0.25
   jumpForce: 5

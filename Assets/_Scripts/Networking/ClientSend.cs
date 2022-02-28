@@ -53,12 +53,14 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void SpawnProjectile(Vector3 location, Vector3 direction)
+    public static void SpawnProjectile(Vector3 location, Vector3 direction, float speed, int bounceCount)
     {
         using (Packet packet = new Packet((int)ClientPackets.spawnProjectile))
         {
             packet.Write(location);
             packet.Write(direction);
+            packet.Write(speed);
+            packet.Write(bounceCount);
 
             SendTCPData(packet);
         }
@@ -74,12 +76,13 @@ public class ClientSend : MonoBehaviour
         }
     }
 
-    public static void DroppedItem(Vector3 position, ushort id, string uuid)
+    public static void DroppedItem(Vector3 position, ushort id, int stackSize, string uuid)
     {
         using (Packet packet = new Packet((int)ClientPackets.droppedItem))
         {
             packet.Write(position);
             packet.Write(id);
+            packet.Write(stackSize);
             packet.Write(uuid);
 
             SendTCPData(packet);

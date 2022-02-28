@@ -12,6 +12,18 @@ public class ElipsoidRigidbody : MonoBehaviour
     public float VerticalMomentum { get; set; }
     public bool IsGrounded { get; set; }
 
+    public bool PositionInside(int3 position)
+    {
+        bool3 result3 = (transform.position.FloorToInt3() == position);
+        bool result = result3.x && result3.y && result3.z;
+        for (int i = 1; i <= (int)objectHeight; i++)
+        {
+            result3 = (transform.position.FloorToInt3() + new int3(0, i, 0) == position);
+            result |= result3.x && result3.y && result3.z;
+        }
+        return result;
+    }
+
     private bool Colliding(int3 position)
     {
         bool result = RimecraftWorld.worldData.CheckForVoxel(position) == 0;
@@ -46,7 +58,7 @@ public class ElipsoidRigidbody : MonoBehaviour
         return Colliding(position);
     }
 
-    public void CalculateVelocity(float horizontal, float vertical, float speed)
+    public void CalculateVelocity(float horizontal, float vertical, float speed, bool crouching = false)
     {
         // Affect verical momentum with gravity.
         if (usesGravity)
@@ -55,7 +67,17 @@ public class ElipsoidRigidbody : MonoBehaviour
         }
 
         // if we're sprinting, use the sprint multiplier.
-
+        if (crouching)
+        {
+            if (!ObjectObstructedVerticallyAt(-0.8f, this.transform.position + transform.forward * vertical * Time.fixedDeltaTime * speed))
+            {
+                vertical = 0;
+            }
+            if (!ObjectObstructedVerticallyAt(-0.8f, this.transform.position + transform.right * horizontal * Time.fixedDeltaTime * speed))
+            {
+                horizontal = 0;
+            }
+        }
         velocity = ((transform.forward * vertical) + (transform.right * horizontal)) * Time.fixedDeltaTime * speed;
 
         // Apply vertical momentum (falling/jumping).
@@ -84,35 +106,35 @@ public class ElipsoidRigidbody : MonoBehaviour
         }
     }
 
-    private int3 ObjectWidthBlockLocations(int index, float verticalOffset)
+    private int3 ObjectWidthBlockLocations(int index, Vector3 position, float verticalOffset)
     {
         // Grabs the top right position block relative to object
-        float widthAdjustment = (objectWidth);
+        float widthAdjustment = objectWidth;
 
-        if (index == 0)
+        switch (index)
         {
-            return new int3(Mathf.FloorToInt(transform.position.x - widthAdjustment), Mathf.FloorToInt(transform.position.y + verticalOffset), Mathf.FloorToInt(transform.position.z - widthAdjustment));
-        }
-        else if (index == 1)
-        {
-            return new int3(Mathf.FloorToInt(transform.position.x + widthAdjustment), Mathf.FloorToInt(transform.position.y + verticalOffset), Mathf.FloorToInt(transform.position.z - widthAdjustment));
-        }
-        else if (index == 2)
-        {
-            return new int3(Mathf.FloorToInt(transform.position.x + widthAdjustment), Mathf.FloorToInt(transform.position.y + verticalOffset), Mathf.FloorToInt(transform.position.z + widthAdjustment));
-        }
-        else
-        {
-            return new int3(Mathf.FloorToInt(transform.position.x - widthAdjustment), Mathf.FloorToInt(transform.position.y + verticalOffset), Mathf.FloorToInt(transform.position.z + widthAdjustment));
+            case 0:
+                return new int3(Mathf.FloorToInt(position.x - widthAdjustment), Mathf.FloorToInt(position.y + verticalOffset), Mathf.FloorToInt(position.z - widthAdjustment));
+
+            case 1:
+                return new int3(Mathf.FloorToInt(position.x + widthAdjustment), Mathf.FloorToInt(position.y + verticalOffset), Mathf.FloorToInt(position.z - widthAdjustment));
+
+            case 2:
+                return new int3(Mathf.FloorToInt(position.x + widthAdjustment), Mathf.FloorToInt(position.y + verticalOffset), Mathf.FloorToInt(position.z + widthAdjustment));
+
+            default:
+                return new int3(Mathf.FloorToInt(position.x - widthAdjustment), Mathf.FloorToInt(position.y + verticalOffset), Mathf.FloorToInt(position.z + widthAdjustment));
         }
     }
 
-    public bool ObjectObstructedVerticallyAt(float height)
+    public bool ObjectObstructedVerticallyAt(float height, Vector3 position)
     {
-        return !(RimecraftWorld.worldData.CheckForVoxel(ObjectWidthBlockLocations(0, height)) == 0 &&
-            RimecraftWorld.worldData.CheckForVoxel(ObjectWidthBlockLocations(1, height)) == 0 &&
-            RimecraftWorld.worldData.CheckForVoxel(ObjectWidthBlockLocations(2, height)) == 0 &&
-            RimecraftWorld.worldData.CheckForVoxel(ObjectWidthBlockLocations(3, height)) == 0);
+        bool obstructed = true;
+        for (int i = 0; i < 4; i++)
+        {
+            obstructed &= RimecraftWorld.worldData.CheckForVoxel(ObjectWidthBlockLocations(i, position, height)) == 0;
+        }
+        return !obstructed;
     }
 
     private void OnDrawGizmos()
@@ -123,7 +145,7 @@ public class ElipsoidRigidbody : MonoBehaviour
 
     private float CheckDownSpeed(float downSpeed)
     {
-        if (ObjectObstructedVerticallyAt(downSpeed))
+        if (ObjectObstructedVerticallyAt(downSpeed, transform.position))
         {
             IsGrounded = true;
             VerticalMomentum = 0;
@@ -138,7 +160,7 @@ public class ElipsoidRigidbody : MonoBehaviour
 
     private float CheckUpSpeed(float upSpeed)
     {
-        if (ObjectObstructedVerticallyAt(upSpeed + objectHeight))
+        if (ObjectObstructedVerticallyAt(upSpeed + objectHeight, transform.position))
         {
             VerticalMomentum = 0;
             return 0;

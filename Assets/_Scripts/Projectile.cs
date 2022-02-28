@@ -27,11 +27,11 @@ public class Projectile : MonoBehaviour
         canBreakBlocks = state;
     }
 
-    public static void SpawnProjectile(Vector3 position, Vector3 direction, bool breakState = false)
+    public static void SpawnProjectile(Vector3 position, Vector3 direction, float speed, int bounceCount, bool breakState = false)
     {
         GameObject projectile = Instantiate(Resources.Load("Mining Projectile"), position, Quaternion.identity) as GameObject;
         Projectile proj = projectile.GetComponent<Projectile>();
-        proj.Fire(direction, 10, 3);
+        proj.Fire(direction, speed, bounceCount);
         proj.SetBreakBlocks(breakState);
     }
 
@@ -87,7 +87,7 @@ public class Projectile : MonoBehaviour
         int3 breakBlock = rbody.lastCollidedWithBlockLocation;
         ushort blockBreakingID = RimecraftWorld.worldData.GetVoxelFromPosition(breakBlock);
 
-        ChunkData chunk = RimecraftWorld.worldData.RequestChunkViaGlobalPosition(breakBlock, false);
+        ChunkData chunk = RimecraftWorld.worldData.RequestChunkViaGlobalPosition(breakBlock);
         if (chunk != null)
         {
             RimecraftWorld.worldData.SetVoxel(breakBlock, 0);

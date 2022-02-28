@@ -79,7 +79,7 @@ public class ServerListObject : MonoBehaviour
     private void FixedUpdate()
     {
         UpdateImage();
-        if (connectWhenPossible && ThreadSafeCanConnect)
+        if (connectWhenPossible && ThreadSafeCanConnect && !ThreadSafeWaiting)
         {
             currentClient.ConnectToServer();
         }

@@ -41,17 +41,20 @@ namespace RimecraftServer
         {
             Vector3 position = packet.ReadVector3();
             Vector3 direction = packet.ReadVector3();
+            float speed = packet.ReadFloat();
+            int bounceCount = packet.ReadInt();
 
-            ServerSend.SpawnProjectile(fromClient, position, direction);
+            ServerSend.SpawnProjectile(fromClient, position, direction, speed, bounceCount);
         }
 
         public static void DroppedItem(int fromClient, Packet packet)
         {
             Vector3 position = packet.ReadVector3();
             ushort id = packet.ReadUShort();
+            int stackSize = packet.ReadInt();
             string uuid = packet.ReadString();
 
-            ServerSend.DroppedItem(fromClient, position, id, uuid);
+            ServerSend.DroppedItem(fromClient, position, id, stackSize, uuid);
         }
 
         public static void ModifyVoxel(int fromClient, Packet packet)
