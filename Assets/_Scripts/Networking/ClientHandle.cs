@@ -75,9 +75,10 @@ public class ClientHandle : MonoBehaviour
     {
         Vector3 globalPosition = packet.ReadVector3();
         ushort id = packet.ReadUShort();
+        int stackSize = packet.ReadInt();
         string uuid = packet.ReadString();
 
-        DropItem.TrySpawnDropItem(id, globalPosition, uuid);
+        DropItem.SpawnDropItem(id, globalPosition, stackSize, uuid);
     }
 
     public static void SpawnProjectile(Packet packet)
