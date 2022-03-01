@@ -25,7 +25,7 @@ public class ClientSend : MonoBehaviour
         {
             packet.Write(Client.Instance.myId);
             packet.Write("null");
-            packet.Write(RimecraftWorld.settings.viewDistance + 2); // our load distance is viewDistance + 2
+            packet.Write(RimecraftWorld.settings.viewDistance + 1); // our load distance is viewDistance + 1
 
             SendTCPData(packet);
         }

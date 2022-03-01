@@ -25,6 +25,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
 
     private void Start()
     {
+        Debug.Log("Creating new world data");
         worldData = new WorldData();
 
         if (settings == null)

@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Net;
 using Unity.Mathematics;
 
-public class ClientHandle : MonoBehaviour
+public class ClientHandle
 {
     public static void Welcome(Packet packet)
     {
@@ -20,9 +20,15 @@ public class ClientHandle : MonoBehaviour
 
     public static void SetAddChunk(Packet packet)
     {
-        ChunkData data = packet.ReadChunkData();
-        while (RimecraftWorld.worldData == null) ;
-        RimecraftWorld.worldData.SetChunk(data);
+        if (RimecraftWorld.worldData == null)
+        {
+            Debug.Log("WHYYYYYYYYYYYYYYYY");
+        }
+        else
+        {
+            ChunkData data = packet.ReadChunkData();
+            RimecraftWorld.worldData.SetChunk(data);
+        }
     }
 
     public static void PlayerDisconnected(Packet packet)
@@ -31,7 +37,7 @@ public class ClientHandle : MonoBehaviour
 
         if (GameManager.players.ContainsKey(id))
         {
-            Destroy(GameManager.players[id].transform.gameObject);
+            GameManager.Destroy(GameManager.players[id].transform.gameObject);
             GameManager.players.Remove(id);
         }
     }
