@@ -84,7 +84,7 @@ namespace RimecraftServer
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error receiving TCP data: {ex}");
+                    //Console.WriteLine($"Error receiving TCP data: {ex}");
                     Server.clients[id].Disconnect();
                 }
             }

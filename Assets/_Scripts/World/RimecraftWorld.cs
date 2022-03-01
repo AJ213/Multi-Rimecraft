@@ -19,7 +19,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
     public int3 playerChunkCoord;
     private int3 playerLastChunkCoord;
 
-    private List<int3> chunksToUpdate = new List<int3>();
+    private Queue<int3> chunksToUpdate = new Queue<int3>();
 
     public static WorldData worldData;
 
@@ -59,7 +59,7 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
         }
     }
 
-    public void AddChunkToUpdate(int3 coord, bool insert = false)
+    public void AddChunkToUpdate(int3 coord)
     {
         if (!ChunkMeshManager.Instance.chunkMeshes.ContainsKey(coord))
         {
@@ -73,27 +73,19 @@ public class RimecraftWorld : MonoBehaviourSingleton<RimecraftWorld>
             return;
         }
 
-        // If insert is true, chunk gets inserted at the top of the list.
-        if (insert)
-        {
-            chunksToUpdate.Insert(0, coord);
-        }
-        else
-        {
-            chunksToUpdate.Add(coord);
-        }
+        chunksToUpdate.Enqueue(coord);
     }
 
     private void UpdateChunks()
     {
-        ChunkMesh ourMesh = ChunkMeshManager.Instance.chunkMeshes[chunksToUpdate[0]];
-        ThreadPool.QueueUserWorkItem(ChunkMesh.CreateMeshData, ourMesh.coord);
-
-        if (!activeChunks.Contains(chunksToUpdate[0]))
+        int3 coord = chunksToUpdate.Dequeue();
+        if (worldData.chunks.ContainsKey(coord))
         {
-            activeChunks.Add(chunksToUpdate[0]);
+            ChunkMesh ourMesh = ChunkMeshManager.Instance.chunkMeshes[coord];
+            ChunkData chunkCopy = new ChunkData(coord, worldData.chunks[coord]);
+
+            ThreadPool.QueueUserWorkItem(ChunkMesh.CreateMeshData, new object[] { chunkCopy, ourMesh });
         }
-        chunksToUpdate.RemoveAt(0);
     }
 
     private void CheckViewDistance()

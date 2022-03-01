@@ -32,6 +32,8 @@ namespace RimecraftServer
             SurfaceBlocks(ref voxelID, globalPosition, mainBiome, terrainHeight, 2, 15);
             LodeGeneration(ref voxelID, globalPosition, mainBiome, noise);
 
+            if (globalPosition.Y == 30) { voxelID = 1; }
+
             return voxelID;
         }
 
