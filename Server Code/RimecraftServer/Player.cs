@@ -11,8 +11,8 @@ namespace RimecraftServer
         public string username;
         public int loadDistance;
         public Vector3 coord;
-        public Vector3 lastCoord = new Vector3(-1, -1, -1);
-        public HashSet<Vector3> loadedChunks = new HashSet<Vector3>();
+        public Vector3 lastCoord;
+        public HashSet<Vector3> loadedChunks;
 
         public Vector3 position;
         public Quaternion rotation;
@@ -24,7 +24,12 @@ namespace RimecraftServer
             this.loadDistance = viewDistance;
             this.position = spawnPosition;
             this.rotation = Quaternion.Identity;
+            coord = Vector3.Zero;
+            loadedChunks = new HashSet<Vector3>();
+            lastCoord = new Vector3(-1, -1, -1);
         }
+
+        
 
         public void UpdateLastCoord()
         {
@@ -39,7 +44,7 @@ namespace RimecraftServer
             ServerSend.PlayerRotation(this);
         }
 
-        public void SetInput(Vector3 position, Quaternion rotation)
+        public void SetMovement(Vector3 position, Quaternion rotation)
         {
             this.position = position;
             this.rotation = rotation;

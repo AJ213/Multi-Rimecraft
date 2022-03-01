@@ -2,6 +2,8 @@
 using UnityEngine;
 using Unity.Mathematics;
 using System.Collections.Concurrent;
+using System.Threading;
+using System;
 
 public class ChunkMesh
 {
@@ -20,6 +22,17 @@ public class ChunkMesh
     private Material[] materials = new Material[3];
 
     private bool isActive;
+    private int _threadSafeBoolBackValue = 0;
+
+    public bool CreateMeshReady
+    {
+        get { return (Interlocked.CompareExchange(ref _threadSafeBoolBackValue, 1, 1) == 1); }
+        set
+        {
+            if (value) Interlocked.CompareExchange(ref _threadSafeBoolBackValue, 1, 0);
+            else Interlocked.CompareExchange(ref _threadSafeBoolBackValue, 0, 1);
+        }
+    }
 
     public ChunkMesh(int3 coord)
     {
@@ -37,42 +50,42 @@ public class ChunkMesh
         chunkObject.transform.SetParent(RimecraftWorld.Instance.transform);
         chunkObject.transform.position = new Vector3(coord.x * Constants.CHUNK_SIZE, coord.y * Constants.CHUNK_SIZE, coord.z * Constants.CHUNK_SIZE);
         chunkObject.name = "Chunk " + coord.x + ", " + coord.y + "," + coord.z;
+        CreateMeshReady = false;
     }
 
-    private void UpdateChunk()
+    private void UpdateChunk(ChunkData chunk)
     {
-        if (RimecraftWorld.worldData.chunks.ContainsKey(coord) && RimecraftWorld.worldData.chunks[coord] != null)
-        {
-            ClearMeshData();
-            int vertexIndex = 0;
-            ChunkData chunk = new ChunkData(coord, RimecraftWorld.worldData.chunks[coord]);
+        CreateMeshReady = false;
 
-            for (int y = 0; y < Constants.CHUNK_SIZE; y++)
+        ClearMeshData();
+        int vertexIndex = 0;
+
+        for (int y = 0; y < Constants.CHUNK_SIZE; y++)
+        {
+            for (int x = 0; x < Constants.CHUNK_SIZE; x++)
             {
-                for (int x = 0; x < Constants.CHUNK_SIZE; x++)
+                for (int z = 0; z < Constants.CHUNK_SIZE; z++)
                 {
-                    for (int z = 0; z < Constants.CHUNK_SIZE; z++)
+                    if (ChunkMeshManager.Instance.blockTypes[chunk[x, y, z]] != null)
                     {
-                        if (ChunkMeshManager.Instance.blockTypes[chunk[x, y, z]] != null)
+                        if (ChunkMeshManager.Instance.blockTypes[chunk[x, y, z]].IsSolid)
                         {
-                            if (ChunkMeshManager.Instance.blockTypes[chunk[x, y, z]].IsSolid)
-                            {
-                                UpdateMeshData(new int3(x, y, z), ref vertexIndex, chunk);
-                            }
+                            UpdateMeshData(new int3(x, y, z), ref vertexIndex, chunk);
                         }
                     }
                 }
             }
-            ChunkMeshManager.Instance.chunksToDraw.Enqueue(this);
         }
+        ChunkMeshManager.Instance.chunksToDraw.Push(this);
+        CreateMeshReady = true;
     }
 
     public static void CreateMeshData(object state)
     {
-        int3 coord = (int3)state;
-        ChunkMesh chunkMesh;
-        ChunkMeshManager.Instance.chunkMeshes.TryGetValue(coord, out chunkMesh);
-        chunkMesh.UpdateChunk();
+        object[] arr = state as object[];
+        ChunkData data = arr[0] as ChunkData;
+        ChunkMesh chunkMesh = arr[1] as ChunkMesh;
+        chunkMesh.UpdateChunk(data);
     }
 
     private void UpdateMeshData(int3 localPosition, ref int vertexIndex, ChunkData chunk)
@@ -89,7 +102,7 @@ public class ChunkMesh
                 {
                     vertices.Enqueue(localPosition + (float3)ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].position);
                     normals.Enqueue(ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].normal);
-                    AddTexture(ChunkMeshManager.Instance.blockTypes[voxel].GetTextureID(p), ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].uv, uvs);
+                    AddTexture(ChunkMeshManager.Instance.blockTypes[voxel].GetTextureID(p), ChunkMeshManager.Instance.blockTypes[voxel].MeshData.faces[p].vertData[i].uv);
                     faceVertCount++;
                 }
 
@@ -123,17 +136,20 @@ public class ChunkMesh
 
     public void CreateMesh()
     {
-        Mesh mesh = new Mesh
+        if (CreateMeshReady)
         {
-            vertices = vertices.ToArray(),
-            uv = uvs.ToArray()
-        };
-        mesh.subMeshCount = 3;
-        mesh.SetTriangles(triangles.ToArray(), 0);
-        mesh.SetTriangles(transparentTriangles.ToArray(), 1);
-        mesh.SetTriangles(shinyTriangles.ToArray(), 2);
-        mesh.normals = normals.ToArray();
-        meshFilter.mesh = mesh;
+            Mesh mesh = new Mesh
+            {
+                vertices = vertices.ToArray(),
+                uv = uvs.ToArray()
+            };
+            mesh.subMeshCount = 3;
+            mesh.SetTriangles(triangles.ToArray(), 0);
+            mesh.SetTriangles(transparentTriangles.ToArray(), 1);
+            mesh.SetTriangles(shinyTriangles.ToArray(), 2);
+            mesh.normals = normals.ToArray();
+            meshFilter.mesh = mesh;
+        }
     }
 
     private void ClearMeshData()
@@ -159,7 +175,7 @@ public class ChunkMesh
         }
     }
 
-    private void AddTexture(int textureID, Vector2 uv, ConcurrentQueue<Vector2> uvs)
+    private void AddTexture(int textureID, Vector2 uv)
     {
         float y = textureID / VoxelData.TextureAtlasSizeInBlocks;
         float x = textureID - (y * VoxelData.TextureAtlasSizeInBlocks);

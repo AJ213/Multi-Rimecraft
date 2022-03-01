@@ -89,7 +89,7 @@ public class WorldData
 
             if (ChunkMeshManager.Instance.chunkMeshes.ContainsKey(coord))
             {
-                RimecraftWorld.Instance.AddChunkToUpdate(coord, true);
+                RimecraftWorld.Instance.AddChunkToUpdate(coord);
             }
         }
     }

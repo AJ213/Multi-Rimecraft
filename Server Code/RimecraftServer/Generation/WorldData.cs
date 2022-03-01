@@ -36,7 +36,7 @@ namespace RimecraftServer
             biomes[0].octaves = 3;
             biomes[0].persistence = 0.45f;
 
-            Lode[] lodes = new Lode[] { new Lode(), new Lode(), new Lode(), new Lode() };
+            Lode[] lodes = new Lode[] { new Lode(), new Lode(), new Lode(), new Lode(), new Lode() };
             lodes[0].blockID = 2;
             lodes[0].minHeight = -500;
             lodes[0].maxHeight = 400;
@@ -58,12 +58,19 @@ namespace RimecraftServer
             lodes[2].threshold = 0.6f;
             lodes[2].noiseOffset = 1623;
 
-            lodes[3].blockID = 0;
+            lodes[3].blockID = 4;
             lodes[3].minHeight = -500;
-            lodes[3].maxHeight = 400;
-            lodes[3].scale = 0.03f;
+            lodes[3].maxHeight = -5;
+            lodes[3].scale = 0.2f;
             lodes[3].threshold = 0.6f;
-            lodes[3].noiseOffset = 1923;
+            lodes[3].noiseOffset = 2623;
+
+            lodes[4].blockID = 0;
+            lodes[4].minHeight = -500;
+            lodes[4].maxHeight = 400;
+            lodes[4].scale = 0.03f;
+            lodes[4].threshold = 0.6f;
+            lodes[4].noiseOffset = 1923;
 
             biomes[0].lodes = lodes;
         }

@@ -32,7 +32,7 @@ namespace RimecraftServer
             {
                 if (Server.clients[fromClient].player != null)
                 {
-                    Server.clients[fromClient].player.SetInput(position, rotation);
+                    Server.clients[fromClient].player.SetMovement(position, rotation);
                 }
             }
         }

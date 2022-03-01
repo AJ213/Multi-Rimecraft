@@ -11,7 +11,7 @@ public class ChunkMeshManager : MonoBehaviourSingleton<ChunkMeshManager>
     public Material shinyMaterial = null;
     public AllBlockTypes blockTypes = null;
 
-    [HideInInspector] public ConcurrentQueue<ChunkMesh> chunksToDraw = new ConcurrentQueue<ChunkMesh>();
+    [HideInInspector] public ConcurrentStack<ChunkMesh> chunksToDraw = new ConcurrentStack<ChunkMesh>();
     [HideInInspector] public ConcurrentDictionary<int3, ChunkMesh> chunkMeshes = new ConcurrentDictionary<int3, ChunkMesh>();
 
     private void FixedUpdate()
@@ -19,7 +19,8 @@ public class ChunkMeshManager : MonoBehaviourSingleton<ChunkMeshManager>
         if (chunksToDraw.Count > 0)
         {
             ChunkMesh result;
-            chunksToDraw.TryDequeue(out result);
+            chunksToDraw.TryPop(out result);
+
             result.CreateMesh();
         }
     }
