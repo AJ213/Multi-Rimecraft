@@ -21,7 +21,8 @@ namespace RimecraftServer
         modifiedVoxel,
         spawnProjectile,
         pickupItem,
-        droppedItem
+        droppedItem,
+        playerDisconncted
     }
 
     /// <summary>

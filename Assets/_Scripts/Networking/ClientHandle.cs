@@ -25,6 +25,17 @@ public class ClientHandle : MonoBehaviour
         RimecraftWorld.worldData.SetChunk(data);
     }
 
+    public static void PlayerDisconnected(Packet packet)
+    {
+        int id = packet.ReadInt();
+
+        if (GameManager.players.ContainsKey(id))
+        {
+            Destroy(GameManager.players[id].transform.gameObject);
+            GameManager.players.Remove(id);
+        }
+    }
+
     public static void SpawnPlayer(Packet packet)
     {
         int id = packet.ReadInt();

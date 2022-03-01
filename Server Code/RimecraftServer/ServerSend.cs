@@ -131,6 +131,16 @@ namespace RimecraftServer
             }
         }
 
+        public static void PlayerDisconnected(int clientId)
+        {
+            using (Packet packet = new Packet((int)ServerPackets.playerDisconncted))
+            {
+                packet.Write(clientId);
+
+                SendTCPDataToAll(packet);
+            }
+        }
+
         public static void ModifiedVoxel(int fromClient, Vector3 globalPosition, ushort id)
         {
             using (Packet packet = new Packet((int)ServerPackets.modifiedVoxel))
@@ -141,16 +151,6 @@ namespace RimecraftServer
                 SendTCPDataToAll(fromClient, packet);
             }
         }
-
-        /*public static void SendChunkToAll(ChunkData chunk)
-        {
-            using (Packet packet = new Packet((int)ServerPackets.chunkData))
-            {
-                packet.Write(chunk);
-
-                SendTCPDataToAll(packet);
-            }
-        }*/
 
         public static void PlayerPosition(Player player)
         {
