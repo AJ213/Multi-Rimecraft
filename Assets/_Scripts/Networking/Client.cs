@@ -279,7 +279,8 @@ public class Client : MonoBehaviourSingleton<Client>
             {(int)ServerPackets.modifiedVoxel, ClientHandle.ModifiedVoxel },
             {(int)ServerPackets.spawnProjectile, ClientHandle.SpawnProjectile },
             {(int)ServerPackets.pickupItem, ClientHandle.PickupItem },
-            {(int)ServerPackets.droppedItem, ClientHandle.DroppedItem }
+            {(int)ServerPackets.droppedItem, ClientHandle.DroppedItem },
+            {(int)ServerPackets.playerDisconncted, ClientHandle.PlayerDisconnected }
         };
         Debug.Log("Initialized packets.");
     }

@@ -20,7 +20,8 @@ public enum ServerPackets
     modifiedVoxel,
     spawnProjectile,
     pickupItem,
-    droppedItem
+    droppedItem,
+    playerDisconncted
 }
 
 /// <summary>

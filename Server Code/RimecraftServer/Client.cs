@@ -209,11 +209,22 @@ namespace RimecraftServer
         private void Disconnect()
         {
             Console.WriteLine($"{tcp.socket.Client.RemoteEndPoint} has disconnected.");
+            int id = 0;
+            bool idSet = false;
+            if (player != null)
+            {
+                id = player.id;
+                idSet = true;
+            }
 
             player = null;
 
             tcp.Disconnect();
             udp.Disconnect();
+            if (idSet)
+            {
+                ServerSend.PlayerDisconnected(id);
+            }
         }
     }
 }
