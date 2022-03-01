@@ -84,7 +84,7 @@ namespace RimecraftServer
                 }
                 catch (Exception ex)
                 {
-                    //Console.WriteLine($"Error receiving TCP data: {ex}");
+                    Console.WriteLine($"Error receiving TCP data: {ex}");
                     Server.clients[id].Disconnect();
                 }
             }
@@ -193,6 +193,7 @@ namespace RimecraftServer
                 {
                     if (client.id != id)
                     {
+                        Console.WriteLine($"Spawning for others: {client.player.id}");
                         ServerSend.SpawnPlayer(id, client.player);
                     }
                 }
@@ -201,6 +202,7 @@ namespace RimecraftServer
             {
                 if (client.player != null)
                 {
+                    Console.WriteLine($"Spawning id: {client.id} for self");
                     ServerSend.SpawnPlayer(client.id, player);
                 }
             }

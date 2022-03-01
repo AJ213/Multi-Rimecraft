@@ -36,6 +36,7 @@ public class Client : MonoBehaviourSingleton<Client>
         tcp.Connect();
         isConnected = true;
         UnityEngine.SceneManagement.SceneManager.LoadScene("InGame");
+        Debug.Log("loading new scene");
     }
 
     public void DisconnectFromServer()

@@ -213,6 +213,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        Debug.Log("spawned Player");
         rbody = this.gameObject.GetComponent<ElipsoidRigidbody>();
         cam = Camera.main.transform;
         Cursor.lockState = CursorLockMode.Locked;
