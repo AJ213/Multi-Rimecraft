@@ -77,7 +77,7 @@ namespace RimecraftServer
 
         private static int GetSeed(string seed)
         {
-            using var algo = SHA1.Create();
+            var algo = SHA1.Create();
             var hash = BitConverter.ToInt32(algo.ComputeHash(Encoding.UTF8.GetBytes(seed)));
             return hash;
         }
